@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Meine Notizen</title>
+    <link rel="stylesheet" href="css/notes.css" type="text/css" media="all">
+    <link rel="stylesheet" href="css/skin-default.css" type="text/css" media="all" id="skin-css">
+</head>
+<body>
+    <div class="row">
+    <button onclick="goto('new.html')">Neue Notiz erstellen</button>
+        <select onchange="changeSkin()" id="skins" name="Skins">
+            <option value="skin-default">Skin Default</option>
+            <option value="skin-grey">Skin Grey</option>
+            <option value="skin-green">Skin Green</option>
+        </select>
+    </div>
+    <div class="row">
+        <span>Sortieren nach:</span>
+        <button class="todo" onclick="sort(1)">Erledigt Datum</button>
+        <button class="todo" onclick="sort(2)">Erstellt Datum</button>
+        <button class="todo" onclick="sort(3)">Wichtigkeit</button>
+        <span>Abgeschlossen:</span>
+        <button class="todo" onclick="hideFinished()">anzeigen</button>
+
+    </div>
+    <div id="displayNotes" class="row"></div>
+
+    <hr>
+    <h4>Just some html samples for development</h4>
+    <div class="row">
+        <ul id="note-0" class="entry">
+            <li class="date">Nächsten Mittwoch</li>
+            <li class="title">CAS FEE Selbststudium / Projekt Aufgabe erledigen</li>
+            <li class="priority">Wichtigkeit: 2</li>
+            <li class="finished"><input id="finished-entry-1" type="checkbox" checked>Finished</li>
+            <li class="description">HTML für die note App erstellen. <br>CSS erstellen für note App [<a onclick="showMoreContent(0)" href="#" >Show more</a>]</li>
+            <li class="edit"><button id="edit-note-0" onclick="edit(0)">Bearbeiten</button></li>
+        </ul>
+        <ul id="note-1" class="entry">
+            <li class="date">Heute</li>
+            <li class="title">Einkaufen</li>
+            <li class="priority">Wichtigkeit: 5</li>
+            <li class="finished"><input id="finished-entry-2" type="checkbox"><label for="finished-entry-2">Finished</label></li>
+            <li class="description">Butter<br>Eier [<a onclick="showMoreContent(1)" href="#">Show more</a>]</li>
+            <li class="edit"><button id="edit-note-1" onclick="edit(1)">Bearbeiten</button></li>
+        </ul>
+        <ul id="note-2" class="entry">
+            <li class="date">Irgendwann</li>
+            <li class="title">Einkaufen</li>
+            <li class="priority">Wichtigkeit: 1</li>
+            <li class="finished"><input id="finished-entry-3" type="checkbox"><label for="finished-entry-2">Finished</label></li>
+            <li class="description">Da kommt ein langer Fliesstext daher, ein langer Fliesstext, ein langer Fliesstext  [<a onclick="showMoreContent(2)" href="#">Show more</a>]</li>
+            <li class="edit"><button id="edit-note-2" onclick="edit(2)">Bearbeiten</button></li>
+        </ul>
+    </div>
+    <div class="row">
+
+    </div>
+    <script src="js/notes.js"></script>
+    <script type="text/javascript">displayNotes();</script>
+</body>
+</html>

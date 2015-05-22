@@ -1,0 +1,83 @@
+body {
+    font-family: sans-serif;
+}
+
+.row {
+    padding: 10px;
+}
+
+.edit .row {
+    clear: both;
+}
+
+.edit label {
+    display: block;
+    width: 150px;
+    float: left;
+
+}
+
+.edit input.radio {
+    float: left;
+    margin-right: 6px;
+}
+
+.edit label.radio {
+    display: inline;
+    width: 20px;
+    text-align: left;
+}
+
+.edit input.text {
+    width: 200px;
+}
+
+ul.entry {
+    -webkit-padding-start: 0px;
+    clear: both;
+}
+
+.entry li {
+    list-style-type: none;
+    padding-bottom: 10px;
+    float: left;
+}
+
+.entry li.date {
+    width: 200px;
+}
+
+.entry li.title {
+    font-weight: bold;
+    width: 400px;
+ }
+
+.entry li.priority {
+    width: 200px;
+    text-align: right;
+}
+
+.entry li.finished {
+    width: 200px;
+    clear: both;
+}
+
+.entry li.description {
+    width: 400px;
+    padding-bottom: 40px;
+}
+
+.entry li.edit {
+    width: 200px;
+    text-align: right;
+}
+
+/* just for development */
+hr {
+    margin-top: 100px;
+    clear: both;
+}
+
+.todo {
+    background-color: aquamarine;
+}
