@@ -97,7 +97,45 @@ function showMoreContent(i) {
 }
 
 function editNote(i) {
-    // ToDo: make note i editable
-    alert("ToDo: make note " + i + " editable");
+    // use url parameter noteKey in between pages.
+    goto("edit.html?noteKey=" +i);
 }
 
+function getNoteKeyParameter() {
+    // get i from url - parameter "noteKey"
+    var noteKey = decodeURIComponent(window.location.search.match(/(\?|&)noteKey\=([^&]*)/)[2]);
+    return noteKey;
+}
+
+function setNoteValuesByNoteKeyParameter() {
+     var note =  (JSON.parse(localStorage.getItem("notes")))[getNoteKeyParameter()];;
+
+    // set values to dom
+    document.getElementById("title").value = note.title;
+    document.getElementById("description").value = note.description;
+    document.querySelector('input[name="priority"]:checked').value = note.priority;
+    document.getElementById("duedate").value = note.duedate;
+}
+
+function updateNote() {
+
+    // ToDo: validate input
+
+    // retrieve stored values to update later
+    var notes = JSON.parse(localStorage.getItem("notes"));
+    var noteToUpdate = notes[getNoteKeyParameter()];
+
+    // update note values
+    noteToUpdate.title = document.getElementById("title").value;
+    noteToUpdate.description = document.getElementById("description").value;
+    noteToUpdate.priority = document.querySelector('input[name="priority"]:checked').value;
+    noteToUpdate.duedate = document.getElementById("duedate").value;
+
+    // add updated note to notes Object
+    notes[getNoteKeyParameter()] = noteToUpdate;
+
+    // save updated notes
+    localStorage.setItem("notes",JSON.stringify(notes));
+
+    goto("index.html")
+}
