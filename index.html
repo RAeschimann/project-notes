@@ -5,6 +5,20 @@
     <title>Meine Notizen</title>
     <link rel="stylesheet" href="css/notes.css" type="text/css" media="all">
     <link rel="stylesheet" href="css/skin-default.css" type="text/css" media="all" id="skin-css">
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.min.js"></script>
+    <script id="notes-template" type="text/x-handlebars-template">
+        {{#each this}}
+        <ul id="note-{{id}}" class="entry">
+            <li class="date">{{duedate}}</li>
+            <li class="title">{{title}}</li>
+            <li class="priority">Wichtigkeit: {{priority}}</li>
+            <li class="finished"><input id="finished-entry-{{id}}" type="checkbox" checked>Finished</li>
+            <li class="description">{{description}} [<a onclick="showMoreContent({{id}})" class="todo" href="#" >Show more</a>]</li>
+            <li class="edit"><button id="edit-note-{{id}}" onclick="editNote({{id}})">Bearbeiten</button></li>
+        </ul>
+        {{/each}}
+    </script>
 </head>
 <body>
     <div class="row">
@@ -27,7 +41,7 @@
     <div id="displayNotes" class="row"></div>
 
     <hr>
-    <h4>Just some html samples for development</h4>
+<!--    <h4>Just some html samples for development</h4>
     <div class="row">
         <ul id="note-0" class="entry">
             <li class="date">Nächsten Mittwoch</li>
@@ -54,10 +68,9 @@
             <li class="edit"><button id="edit-note-2" onclick="edit(2)">Bearbeiten</button></li>
         </ul>
     </div>
-    <div class="row">
+    <div class="row">-->
 
     </div>
     <script src="js/notes.js"></script>
-    <script type="text/javascript">displayNotes();</script>
 </body>
 </html>

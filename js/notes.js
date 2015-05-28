@@ -46,28 +46,16 @@ function addNewNote(){
 
     goto("index.html")
 }
-function displayNotes(){
 
-    var listHTML = "";
+function renderNotes(){
+
+    var renderNotesHTMLTemplate = Handlebars.compile($("#notes-template").html());
     var notes =  JSON.parse(localStorage.getItem("notes"));
-    var i = 0;
-    var j = Object.keys(notes).length;
-    while (i < j) {
-        var note = notes[i];
-        var date = prettyDateFormat(note.duedate);
-        listHTML += '<ul id="note-'+i+'" class="entry">';
-        listHTML += '<li class="date">'+date+'</li>';
-        listHTML += '<li class="title">'+note.title+'</li>';
-        listHTML += '<li class="priority">Wichtigkeit: '+note.priority+'</li>';
-        listHTML += '<li class="finished"><input id="finished-entry-'+i+'" type="checkbox">Finished</li>';
-        listHTML += '<li class="description">'+note.description+' [<a onclick="showMoreContent('+i+')" href="#" class="todo">Show more</a>]</li>';
-        listHTML += '<li class="edit"><button class="todo" id="edit-note-'+i+'" onclick="editNote('+i+')">Bearbeiten</button></li>';
-        listHTML += '</ul>';
-        i++;
-    }
-    document.getElementById("displayNotes").innerHTML = listHTML;
+    $("#displayNotes").html(renderNotesHTMLTemplate(notes));
 
 }
+
+
 
 function prettyDateFormat(date) {
     var dateStr;
@@ -139,3 +127,7 @@ function updateNote() {
 
     goto("index.html")
 }
+
+$(function() {
+    renderNotes();
+});
