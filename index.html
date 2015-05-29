@@ -9,13 +9,13 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.min.js"></script>
     <script id="notes-template" type="text/x-handlebars-template">
         {{#each this}}
-        <ul id="note-{{id}}" class="entry">
+        <ul id="note-{{@key}}" class="entry">
             <li class="date">{{duedate}}</li>
             <li class="title">{{title}}</li>
             <li class="priority">Wichtigkeit: {{priority}}</li>
-            <li class="finished"><input id="finished-entry-{{id}}" type="checkbox" checked>Finished</li>
-            <li class="description">{{description}} [<a onclick="showMoreContent({{id}})" class="todo" href="#" >Show more</a>]</li>
-            <li class="edit"><button id="edit-note-{{id}}" onclick="editNote({{id}})">Bearbeiten</button></li>
+            <li class="finished"><input id="finished-entry-{{@key}}" type="checkbox" checked>Finished</li>
+            <li class="description">{{description}} [<a onclick="showMoreContent({{@key}})" class="todo" href="#" >Show more</a>]</li>
+            <li class="edit"><button id="edit-note-{{@key}}" onclick="editNote({{@key}})">Bearbeiten</button></li>
         </ul>
         {{/each}}
     </script>
