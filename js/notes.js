@@ -1,12 +1,13 @@
+"use strict";
 
 function goto(url){
     window.location.replace(url);
 }
 
 function changeSkin(){
-    var style = document.getElementById("skins").value;
+    var style = $('#skins').val();
     if (style) {
-        document.getElementById("skin-css").href = "css/" +style + ".css";
+        $('#skin-css').attr('href', 'css/' +style + '.css');
     }
 }
 
