@@ -6,6 +6,21 @@ function goto(url) {
 
 function changeSkin() {
     var style = $("#skins").val();
+    console.log(style +" from dom");
+
+    // store in session
+    sessionStorage.setItem("skin_style", style);
+
+    applySkin();
+}
+
+function applySkin(){
+    if (sessionStorage.getItem('skin_style')){
+        var style = sessionStorage.getItem('skin_style');
+    } else {
+        var style = $("#skins").val();
+    }
+
     if (style) {
         $('#skin-css').attr('href', 'css/' + style + '.css');
     }
@@ -218,6 +233,7 @@ Handlebars.registerHelper('setStatus', function (finished) {
 
 $(function () {
     renderNotes();
+    applySkin();
     $("#displayNotes").on("click", notesClickEventHandler);
     $("#sorting").on("click", sortClickEventHandler);
     $("#filter").on("click", filterClickEventHandler);
