@@ -6,6 +6,15 @@ body {
     padding: 10px;
 }
 
+.row.sorting {
+    float: left;
+}
+
+.row.filter {
+
+}
+
+
 .edit .row {
     clear: both;
 }
@@ -32,44 +41,61 @@ body {
     width: 200px;
 }
 
-ul.entry {
+li.entry {
     -webkit-padding-start: 0px;
+    list-style-type: none;
+    padding-top: 20px;
+}
+
+.entry {
     clear: both;
 }
 
-.entry li {
-    list-style-type: none;
-    padding-bottom: 10px;
+.entry input {
     float: left;
 }
 
-.entry li.date {
-    width: 200px;
+.entry label {
+    width: 180px;
+    float: left;
 }
 
-.entry li.title {
+.entry .date {
+    width: 200px;
+    float: left;
+}
+
+.entry .title {
     font-weight: bold;
     width: 400px;
+    float: left;
  }
 
-.entry li.priority {
+.entry .priority {
     width: 200px;
     text-align: right;
+    float: left;
 }
 
-.entry li.finished {
-    width: 200px;
+.entry .status {
+    padding-top: 20px;
     clear: both;
 }
 
-.entry li.description {
+.entry .description {
     width: 400px;
     padding-bottom: 40px;
+    float: left;
 }
 
-.entry li.edit {
+.entry .edit {
     width: 200px;
     text-align: right;
+    float: left;
+}
+
+.hide {
+    display: none;
 }
 
 /* just for development */

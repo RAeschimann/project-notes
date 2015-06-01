@@ -5,72 +5,45 @@
     <title>Meine Notizen</title>
     <link rel="stylesheet" href="css/notes.css" type="text/css" media="all">
     <link rel="stylesheet" href="css/skin-default.css" type="text/css" media="all" id="skin-css">
-    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.min.js"></script>
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/handlebars-v3.0.3.js"></script>
     <script id="notes-template" type="text/x-handlebars-template">
-        {{#each this}}
-        <ul id="note-{{@key}}" class="entry">
-            <li class="date">{{duedate}}</li>
-            <li class="title">{{title}}</li>
-            <li class="priority">Wichtigkeit: {{priority}}</li>
-            <li class="finished"><input id="finished-entry-{{@key}}" type="checkbox" checked>Finished</li>
-            <li class="description">{{description}} [<a onclick="showMoreContent({{@key}})" class="todo" href="#" >Show more</a>]</li>
-            <li class="edit"><button id="edit-note-{{@key}}" onclick="editNote({{@key}})">Bearbeiten</button></li>
+        <ul id="notes">
+            {{#each this}}
+            <li id="{{@key}}" class="entry">
+                <div class="date"><span>{{prettyDateFormat duedate}}</span></div>
+                <div class="title"><span>{{title}}</span></div>
+                <div class="priority"><span>Wichtigkeit: {{priority}}</span></div>
+                <div class="status"><input name="status" id="status" type="checkbox" {{setStatus finished}}><label for="status">Finished</label></div>
+                <div class="description"><span>{{description}} [<a data-action="showmore" class="todo" href="#">Show more</a>]</span></div>
+                <div class="edit">
+                    <button data-action="edit">Notiz bearbeiten</button>
+                </div>
+            </li>
+            {{/each}}
         </ul>
-        {{/each}}
     </script>
 </head>
 <body>
-    <div class="row">
+<div class="row">
     <button onclick="goto('new.html')">Neue Notiz erstellen</button>
-        <select onchange="changeSkin()" id="skins" name="Skins">
-            <option value="skin-default">Skin Default</option>
-            <option value="skin-grey">Skin Grey</option>
-            <option value="skin-green">Skin Green</option>
-        </select>
-    </div>
-    <div class="row">
-        <span>Sortieren nach:</span>
-        <button class="todo" onclick="sort(1)">Erledigt Datum</button>
-        <button class="todo" onclick="sort(2)">Erstellt Datum</button>
-        <button class="todo" onclick="sort(3)">Wichtigkeit</button>
-        <span>Abgeschlossen:</span>
-        <button class="todo" onclick="hideFinished()">anzeigen</button>
-
-    </div>
-    <div id="displayNotes" class="row"></div>
-
-    <hr>
-<!--    <h4>Just some html samples for development</h4>
-    <div class="row">
-        <ul id="note-0" class="entry">
-            <li class="date">Nächsten Mittwoch</li>
-            <li class="title">CAS FEE Selbststudium / Projekt Aufgabe erledigen</li>
-            <li class="priority">Wichtigkeit: 2</li>
-            <li class="finished"><input id="finished-entry-1" type="checkbox" checked>Finished</li>
-            <li class="description">HTML für die note App erstellen. <br>CSS erstellen für note App [<a onclick="showMoreContent(0)" href="#" >Show more</a>]</li>
-            <li class="edit"><button id="edit-note-0" onclick="edit(0)">Bearbeiten</button></li>
-        </ul>
-        <ul id="note-1" class="entry">
-            <li class="date">Heute</li>
-            <li class="title">Einkaufen</li>
-            <li class="priority">Wichtigkeit: 5</li>
-            <li class="finished"><input id="finished-entry-2" type="checkbox"><label for="finished-entry-2">Finished</label></li>
-            <li class="description">Butter<br>Eier [<a onclick="showMoreContent(1)" href="#">Show more</a>]</li>
-            <li class="edit"><button id="edit-note-1" onclick="edit(1)">Bearbeiten</button></li>
-        </ul>
-        <ul id="note-2" class="entry">
-            <li class="date">Irgendwann</li>
-            <li class="title">Einkaufen</li>
-            <li class="priority">Wichtigkeit: 1</li>
-            <li class="finished"><input id="finished-entry-3" type="checkbox"><label for="finished-entry-2">Finished</label></li>
-            <li class="description">Da kommt ein langer Fliesstext daher, ein langer Fliesstext, ein langer Fliesstext  [<a onclick="showMoreContent(2)" href="#">Show more</a>]</li>
-            <li class="edit"><button id="edit-note-2" onclick="edit(2)">Bearbeiten</button></li>
-        </ul>
-    </div>
-    <div class="row">-->
-
-    </div>
-    <script src="js/notes.js"></script>
+    <select onchange="changeSkin()" id="skins" name="Skins">
+        <option value="skin-default">Skin Default</option>
+        <option value="skin-grey">Skin Grey</option>
+        <option value="skin-green">Skin Green</option>
+    </select>
+</div>
+<div class="row sorting" id="sorting">
+    <span>Sortieren nach:</span>
+    <button class="todo" data-sort="finished">Erledigt Datum</button>
+    <button class="todo" data-sort="created">Erstellt Datum</button>
+    <button class="todo" data-sort="priority">Wichtigkeit</button>
+</div>
+<div class="row filter" id="filter">
+    <span>Filter:</span>
+    <button id="hide-finished">Abgeschlossene anzeigen</button>
+</div>
+<div id="displayNotes" class="row"></div>
+<script src="js/notes.js"></script>
 </body>
 </html>
