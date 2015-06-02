@@ -153,16 +153,19 @@ function notesClickEventHandler(event) {
     }
     if (action === "showless") {
         // ToDo: showLess(id);
-        return;
     }
 }
 
 function sortClickEventHandler(event) {
 
     var action = event.target.getAttribute("data-sort");
-    // ToDo: get action and sort notes
-    alert("ToDo: sort notes after " + action);
-    return;
+
+    if (action === "priority") {
+        sortNotesByPriority();
+    } else {
+        // ToDo: get other actions and sort notes accordingly
+        alert("ToDo: sort notes after " + action);
+    }
 
 }
 
@@ -230,6 +233,46 @@ Handlebars.registerHelper('setStatus', function (finished) {
     var checked = (finished) ? "checked" : "";
     return checked;
 });
+
+function createSortableArrayOfJSON () {
+
+    // get notes from local storage
+    var notes = JSON.parse(localStorage.getItem("notes"));
+
+    //loop over json and push into a new notes array
+    var arrayOfNotes = [];
+    for( var key in notes ){
+        if( notes.hasOwnProperty( key ) ){
+            arrayOfNotes.push( notes[key] );
+        }
+    }
+    
+    return arrayOfNotes;
+}
+
+function sortNotesByPriority(){
+
+    var arrayOfNotes = createSortableArrayOfJSON();
+
+    //sorting the notes array
+    arrayOfNotes.sort(function(a, b) {
+        var prioA = a.priority;
+        var prioB = b.priority;
+
+        if (prioA > prioB){
+            return -1;
+        } else if (prioA < prioB){
+            return 1;
+        } else{
+            return 0; // equal prio
+        }
+    });
+
+    localStorage.setItem("notes", JSON.stringify(arrayOfNotes));
+    renderNotes();
+}
+
+
 
 $(function () {
     renderNotes();
