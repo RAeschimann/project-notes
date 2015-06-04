@@ -15,10 +15,11 @@ function changeSkin() {
 }
 
 function applySkin(){
+    var style = "";
     if (sessionStorage.getItem('skin_style')){
-        var style = sessionStorage.getItem('skin_style');
+        style = sessionStorage.getItem('skin_style');
     } else {
-        var style = $("#skins").val();
+        style = $("#skins").val();
     }
 
     if (style) {
@@ -31,9 +32,9 @@ function addNewNote() {
     // ToDo: validate input
 
     // get notes from local storage
-    var notes = JSON.parse(localStorage.getItem("notes"));
+    var notes = getNotes();
     if (!notes) {
-        notes = {};
+        notes = [];
     }
 
     // add new note to notes
@@ -42,27 +43,55 @@ function addNewNote() {
     newNote["description"] = $("#description").val();
     newNote["priority"] = $('input[name="priority"]:checked').val();
     newNote["duedate"] = $("#duedate").val();
-    newNote["finished"] = false;
+    newNote["isFinished"] = false;
+    newNote["finished"] = 0;
     // use timestamp as note id
-    var id = new Date().getTime();
-    notes[id] = newNote;
+    newNote["created"] = new Date().getTime();
+
+    // add new note to notes
+    notes.push(newNote);
 
     // save notes
-    localStorage.setItem("notes", JSON.stringify(notes));
+    setNotes(notes);
 
     goto("index.html")
 }
 
-function renderNotes() {
+function renderNotes(notes) {
 
     var renderNotesHTMLTemplate = Handlebars.compile($("#notes-template").html());
-    var notes = JSON.parse(localStorage.getItem("notes"));
     $("#displayNotes").html(renderNotesHTMLTemplate(notes));
 }
 
 function editNote(i) {
     // use url parameter noteKey in between pages.
     goto("edit.html?noteKey=" + i);
+}
+
+function getNotes() {
+    return JSON.parse(localStorage.getItem("notes"));
+}
+
+function setNotes(notes) {
+    localStorage.setItem("notes", JSON.stringify(notes));
+}
+
+function findNote(created, notes) {
+    for (var i = 0; i < notes.length; i++) {
+        if (notes[i].created == created) {
+            return notes[i];
+        }
+    }
+    return {};
+}
+
+function findNoteIndex(created, notes) {
+    for (var i = 0; i < notes.length; i++) {
+        if (notes[i].created == created) {
+            return i;
+        }
+    }
+    return {};
 }
 
 function getNoteKeyParameter() {
@@ -72,16 +101,15 @@ function getNoteKeyParameter() {
 }
 
 function setNoteValuesByNoteKeyParameter() {
-    var note = (JSON.parse(localStorage.getItem("notes")))[getNoteKeyParameter()];
-
+    var note = findNote(getNoteKeyParameter(),getNotes());
     // set values to dom
     $("#title").val(note.title);
     $("#description").val(note.description);
     var prioId = "#prio" + note.priority;
     $(prioId).prop("checked", true);
     $("#duedate").val(note.duedate);
-    if (note.finished) {
-        $('input[name="finished"]').prop("checked", true);
+    if (note.isFinished) {
+        $('input[name="isFinished"]').prop("checked", true);
     }
 }
 
@@ -90,47 +118,42 @@ function updateNote() {
     // ToDo: validate input
 
     // retrieve stored values to update later
-    var notes = JSON.parse(localStorage.getItem("notes"));
-    var noteToUpdate = notes[getNoteKeyParameter()];
+    var noteToUpdate = findNote(getNoteKeyParameter(),getNotes());
 
     // update note values
     noteToUpdate.title = $("#title").val();
     noteToUpdate.description = $("#description").val();
     noteToUpdate.priority = $('input[name="priority"]:checked').val();
     noteToUpdate.duedate = $("#duedate").val();
-    var statusFinished = ($('input[name="finished"]:checked').val()) ? true : false;
+    var statusFinished = ($('input[name="isFinished"]:checked').val()) ? true : false;
     if (statusFinished) {
-        noteToUpdate.finished = true;
+        noteToUpdate.isFinished = true;
+        noteToUpdate.finished = new Date().getTime();
+    } else {
+        // reset finished date
+        noteToUpdate.finished = 0;
+
     }
 
     // add updated note to notes Object
-    notes[getNoteKeyParameter()] = noteToUpdate;
-
+    var notes = getNotes();
+    notes[findNoteIndex(getNoteKeyParameter(),notes)] = noteToUpdate;
     // save updated notes
-    localStorage.setItem("notes", JSON.stringify(notes));
+    setNotes(notes);
+
 
     goto("index.html")
 }
 
 function deleteNode() {
     // retrieve stored notes
-    var notes = JSON.parse(localStorage.getItem("notes"));
-    delete notes[getNoteKeyParameter()];
+    var notes = getNotes();
+    notes.splice(findNoteIndex(getNoteKeyParameter(),notes),1);
     // save updated notes
-    localStorage.setItem("notes", JSON.stringify(notes));
+    setNotes(notes);
     goto("index.html");
 }
 
-/*
- function sortNotes(s1, s2, sortType){
- if (sortType === "priority") {
- return s1.priority < s2.priority;
- } else {
- // Default: sort with creation date
- //s1.key < s2.key;
- }
- }
- */
 
 function notesClickEventHandler(event) {
 
@@ -141,9 +164,9 @@ function notesClickEventHandler(event) {
         editNote(id);
         return;
     }
-    if (action === "status") {
-        alert("ToDo: store new status of note " + id);
-        // ToDo: setStatus(id);
+    if (action === "finished") {
+        alert("ToDo: store new finished status of note " + id + " and display finished date.");
+        // ToDo: setFinishedStatus(id);
         return;
     }
     if (action === "showmore") {
@@ -153,18 +176,15 @@ function notesClickEventHandler(event) {
     }
     if (action === "showless") {
         // ToDo: showLess(id);
+        alert("ToDo: show minimized description of note " + id);
     }
 }
 
 function sortClickEventHandler(event) {
 
     var action = event.target.getAttribute("data-sort");
-
-    if (action === "priority") {
-        sortNotesByPriority();
-    } else {
-        // ToDo: get other actions and sort notes accordingly
-        alert("ToDo: sort notes after " + action);
+    if (action) {
+        sortAndRenderNotesByNumber(action);
     }
 
 }
@@ -175,7 +195,6 @@ function editorClickEventHandler(event) {
     var action = event.target.getAttribute("data-action");
     if (action === "deleteNote") {
         deleteNode();
-        return;
     }
 
 }
@@ -185,11 +204,13 @@ function filterClickEventHandler(event) {
     var action = event.target.textContent;
 
     // ToDo: Use a dropdown for filters like "show all, show open, show finished, etc. ???
+    // ToDo: Is default view without finished notes?
+    // ToDo: use id's for action type instead of button names
 
     if (action === "Abgeschlossene anzeigen") {
         $("#notes").find("li").each(function () {
             $(this).removeClass("hide");
-            var isFinished = $(this).find('input[name="status"]:checked').val();
+            var isFinished = $(this).find('input[name="isFinished"]:checked').val();
             if (!isFinished) {
                 $(this).addClass("hide");
             }
@@ -201,16 +222,13 @@ function filterClickEventHandler(event) {
     if (action === "Offene anzeigen") {
         $("#notes").find("li").each(function () {
             $(this).removeClass("hide");
-            var isFinished = $(this).find('input[name="status"]:checked').val();
+            var isFinished = $(this).find('input[name="isFinished"]:checked').val();
             if (isFinished) {
                 $(this).addClass("hide");
             }
         });
         $("#hide-finished").html('Abgeschlossene anzeigen');
-        return;
     }
-
-    // ToDo: show all or refresh page
 
 }
 
@@ -229,35 +247,20 @@ Handlebars.registerHelper('prettyDateFormat', function (date) {
     return dateStr;
 });
 
-Handlebars.registerHelper('setStatus', function (finished) {
-    var checked = (finished) ? "checked" : "";
+Handlebars.registerHelper('setStatus', function (isFinished) {
+    var checked = (isFinished) ? "checked" : "";
     return checked;
 });
 
-function createSortableArrayOfJSON () {
 
-    // get notes from local storage
-    var notes = JSON.parse(localStorage.getItem("notes"));
+function sortAndRenderNotesByNumber(sorttype){
 
-    //loop over json and push into a new notes array
-    var arrayOfNotes = [];
-    for( var key in notes ){
-        if( notes.hasOwnProperty( key ) ){
-            arrayOfNotes.push( notes[key] );
-        }
-    }
-    
-    return arrayOfNotes;
-}
-
-function sortNotesByPriority(){
-
-    var arrayOfNotes = createSortableArrayOfJSON();
-
+    var arrayOfNotes = getNotes();
+    if (arrayOfNotes) {
     //sorting the notes array
     arrayOfNotes.sort(function(a, b) {
-        var prioA = a.priority;
-        var prioB = b.priority;
+        var prioA = a[sorttype];
+        var prioB = b[sorttype];
 
         if (prioA > prioB){
             return -1;
@@ -268,14 +271,14 @@ function sortNotesByPriority(){
         }
     });
 
-    localStorage.setItem("notes", JSON.stringify(arrayOfNotes));
-    renderNotes();
+    renderNotes(arrayOfNotes);
+    }
 }
 
 
 
 $(function () {
-    renderNotes();
+    sortAndRenderNotesByNumber("created");
     applySkin();
     $("#displayNotes").on("click", notesClickEventHandler);
     $("#sorting").on("click", sortClickEventHandler);
