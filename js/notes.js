@@ -1,9 +1,21 @@
-// GUI-functions start
+/*
+ ---- GUI-functions start ----
+ -- View --
+*/
 
 function goto(url) {
     window.location.replace(url);
 }
 
+function editNote(i) {
+    // use url parameter noteKey in between pages.
+    goto("update.html?noteKey=" + i);
+}
+
+function newNote() {
+    // use url parameter noteKey=0 for new
+    goto("update.html?noteKey=0");
+}
 function changeSkin() {
     var style = $("#skins").val();
     console.log(style +" from dom");
@@ -13,6 +25,7 @@ function changeSkin() {
 
     applySkin();
 }
+
 
 function applySkin(){
     var style = "";
@@ -35,7 +48,6 @@ function renderNotes(notes) {
 }
 
 
-
 // ToDo: avoid handlebars errors in edit mode
 Handlebars.registerHelper('prettyDateFormat', function (date) {
 
@@ -56,6 +68,42 @@ Handlebars.registerHelper('setStatus', function (isFinished) {
 });
 
 
+function sortAndRenderNotesByNumber(sorttype){
+
+    var arrayOfNotes = getNotes();
+    if (arrayOfNotes) {
+        //sorting the notes array
+        arrayOfNotes.sort(function(a, b) {
+            var criteriaA = a[sorttype];
+            var criteriaB = b[sorttype];
+
+            if (criteriaA > criteriaB){
+                return -1;
+            } else if (criteriaA < criteriaB){
+                return 1;
+            } else{
+                return 0; // equal
+            }
+        });
+
+        renderNotes(arrayOfNotes);
+    }
+}
+
+
+;$(function () {
+    "use strict";
+    sortAndRenderNotesByNumber("created");
+    applySkin();
+    $("#displayNotes").on("click", notesClickEventHandler);
+    $("#sorting").on("click", sortClickEventHandler);
+    $("#filter").on("click", filterClickEventHandler);
+    //$("#editor").on("click", editorClickEventHandler);
+});
+
+
+// event-handlers start
+// -- contoller --
 function notesClickEventHandler(event) {
 
     var action = event.target.getAttribute("data-action");
@@ -90,6 +138,7 @@ function sortClickEventHandler(event) {
 
 }
 
+
 function editorClickEventHandler(event) {
     // ToDo: event doesn't arrive from #editor ?
     console.log(event);
@@ -99,6 +148,7 @@ function editorClickEventHandler(event) {
     }
 
 }
+
 
 function filterClickEventHandler(event) {
 
@@ -130,88 +180,24 @@ function filterClickEventHandler(event) {
         });
         $("#hide-finished").html('Abgeschlossene anzeigen');
     }
-
 }
 
+// event handlers end
 
-function sortAndRenderNotesByNumber(sorttype){
-
-    var arrayOfNotes = getNotes();
-    if (arrayOfNotes) {
-        //sorting the notes array
-        arrayOfNotes.sort(function(a, b) {
-            var criteriaA = a[sorttype];
-            var criteriaB = b[sorttype];
-
-            if (criteriaA > criteriaB){
-                return -1;
-            } else if (criteriaA < criteriaB){
-                return 1;
-            } else{
-                return 0; // equal prio
-            }
-        });
-
-        renderNotes(arrayOfNotes);
-    }
-}
-
-
-
-;$(function () {
-    "use strict";
-    sortAndRenderNotesByNumber("created");
-    applySkin();
-    $("#displayNotes").on("click", notesClickEventHandler);
-    $("#sorting").on("click", sortClickEventHandler);
-    $("#filter").on("click", filterClickEventHandler);
-    //$("#editor").on("click", editorClickEventHandler);
-});
-
-// GUI-functions end
+/*
+---- GUI-functions end ----
+*/
 
 
 
 
 
 
-//Business-Functions start
-function addNewNote() {
+/*
+---- Business-Functions start ----
+-- Model --
+*/
 
-    // ToDo: validate input
-
-    // get notes from local storage
-    var notes = getNotes();
-    if (!notes) {
-        notes = [];
-    }
-
-    // add new note to notes
-    var newNote = {};
-    newNote["title"] = $("#title").val();
-    newNote["description"] = $("#description").val();
-    newNote["priority"] = $('input[name="priority"]:checked').val();
-    newNote["duedate"] = $("#duedate").val();
-    newNote["isFinished"] = false;
-    newNote["finished"] = 0;
-    // use timestamp as note id
-    newNote["created"] = new Date().getTime();
-
-    // add new note to notes
-    notes.push(newNote);
-
-    // save notes
-    setNotes(notes);
-
-    goto("index.html")
-}
-
-
-
-function editNote(i) {
-    // use url parameter noteKey in between pages.
-    goto("edit.html?noteKey=" + i);
-}
 
 function getNotes() {
     return JSON.parse(localStorage.getItem("notes"));
@@ -221,6 +207,7 @@ function setNotes(notes) {
     localStorage.setItem("notes", JSON.stringify(notes));
 }
 
+// created is used as the unique identifier of a note
 function findNote(created, notes) {
     for (var i = 0; i < notes.length; i++) {
         if (notes[i].created == created) {
@@ -258,36 +245,71 @@ function setNoteValuesByNoteKeyParameter() {
     }
 }
 
+function addNewNote() {
+
+    // ToDo: validate input
+
+    // get notes from local storage
+    var notes = getNotes();
+    if (!notes) {
+        notes = [];
+    }
+
+    // add new note to notes
+    var newNote = {};
+    newNote["title"] = $("#title").val();
+    newNote["description"] = $("#description").val();
+    newNote["priority"] = $('input[name="priority"]:checked').val();
+    newNote["duedate"] = $("#duedate").val();
+    newNote["isFinished"] = false;
+    newNote["finished"] = 0;
+    // use timestamp as note id
+    newNote["created"] = new Date().getTime();
+
+    // add new note to notes
+    notes.push(newNote);
+
+    // save notes with new note
+    setNotes(notes);
+
+    goto("index.html")
+}
+
 function updateNote() {
 
     // ToDo: validate input
 
     // retrieve stored values to update later
     var noteToUpdate = findNote(getNoteKeyParameter(),getNotes());
-
-    // update note values
-    noteToUpdate.title = $("#title").val();
-    noteToUpdate.description = $("#description").val();
-    noteToUpdate.priority = $('input[name="priority"]:checked').val();
-    noteToUpdate.duedate = $("#duedate").val();
-    var statusFinished = ($('input[name="isFinished"]:checked').val()) ? true : false;
-    if (statusFinished) {
-        noteToUpdate.isFinished = true;
-        noteToUpdate.finished = new Date().getTime();
+    console.log(noteToUpdate.title);
+    if (typeof noteToUpdate.created == 'undefined') { // no existing note found, create a new note
+        addNewNote();
     } else {
-        // reset finished date
-        noteToUpdate.finished = 0;
 
+        // update note values
+        noteToUpdate.title = $("#title").val();
+        noteToUpdate.description = $("#description").val();
+        noteToUpdate.priority = $('input[name="priority"]:checked').val();
+        noteToUpdate.duedate = $("#duedate").val();
+        var statusFinished = ($('input[name="isFinished"]:checked').val()) ? true : false;
+        if (statusFinished) {
+            noteToUpdate.isFinished = true;
+            noteToUpdate.finished = new Date().getTime();
+        } else {
+            // reset finished date
+            noteToUpdate.finished = 0;
+
+        }
+
+        // add updated note to notes Object
+        var notes = getNotes();
+        notes[findNoteIndex(getNoteKeyParameter(), notes)] = noteToUpdate;
+
+        // save updated notes
+        setNotes(notes);
+
+        goto("index.html");
     }
-
-    // add updated note to notes Object
-    var notes = getNotes();
-    notes[findNoteIndex(getNoteKeyParameter(),notes)] = noteToUpdate;
-    // save updated notes
-    setNotes(notes);
-
-
-    goto("index.html")
 }
 
 function deleteNode() {
@@ -299,5 +321,6 @@ function deleteNode() {
     goto("index.html");
 }
 
-//Business-Functions end
-
+/*
+--- Business-Functions end ----
+*/

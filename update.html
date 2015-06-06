@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Neue Notiz erstellen</title>
+    <title> Notiz update</title>
     <link rel="stylesheet" href="css/notes.css" type="text/css" media="all">
 </head>
 <body>
@@ -19,7 +19,7 @@
         <label>Wichtigkeit</label>
         <input class="radio" id="prio1" type="radio" name="priority" value="1"><label class="radio" for="prio1">1</label>
         <input class="radio" id="prio2" type="radio" name="priority" value="2"><label class="radio" for="prio2">2</label>
-        <input class="radio" id="prio3" type="radio" name="priority" value="3" checked><label class="radio" for="prio3">3</label>
+        <input class="radio" id="prio3" type="radio" name="priority" value="3"><label class="radio" for="prio3">3</label>
         <input class="radio" id="prio4" type="radio" name="priority" value="4"><label class="radio" for="prio4">4</label>
         <input class="radio" id="prio5" type="radio" name="priority" value="5"><label class="radio" for="prio5">5</label>
     </div>
@@ -28,14 +28,21 @@
         <input type="date" id="duedate">
     </div>
     <div class="row">
-        <button onclick="addNewNote()">Speichern</button>
-        <button onclick="goto('new.html')">Löschen</button>
+        <label for="isFinished">Erledigt</label>
+        <input type="checkbox" id="isFinished" name="isFinished">
     </div>
     <div class="row">
-        <button class="button" onclick="goto('index.html');">Zurück zur Übersicht</button>
+        <button onclick="updateNote()">Speichern</button>
+    </div>
+    <div class="row">
+        <button onclick="goto('index.html');">Zurück zur Übersicht</button>
+    </div>
+    <div class="row">
+        <button onclick="deleteNode()">Notiz löschen</button>
     </div>
 </div>
 <script src="js/jquery-1.11.3.min.js"></script>
 <script src="js/notes.js"></script>
+<script type="text/javascript">setNoteValuesByNoteKeyParameter();</script>
 </body>
 </html>
