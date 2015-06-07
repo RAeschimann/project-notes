@@ -1,203 +1,6 @@
 /*
- ---- GUI-functions start ----
- -- View --
+business-functions (model)
 */
-
-function goto(url) {
-    window.location.replace(url);
-}
-
-function editNote(i) {
-    // use url parameter noteKey in between pages.
-    goto("update.html?noteKey=" + i);
-}
-
-function newNote() {
-    // use url parameter noteKey=0 for new
-    goto("update.html?noteKey=0");
-}
-function changeSkin() {
-    var style = $("#skins").val();
-    console.log(style +" from dom");
-
-    // store in session
-    sessionStorage.setItem("skin_style", style);
-
-    applySkin();
-}
-
-
-function applySkin(){
-    var style = "";
-    if (sessionStorage.getItem('skin_style')){
-        style = sessionStorage.getItem('skin_style');
-    } else {
-        style = $("#skins").val();
-    }
-
-    if (style) {
-        $('#skin-css').attr('href', 'css/' + style + '.css');
-    }
-}
-
-
-function renderNotes(notes) {
-
-    var renderNotesHTMLTemplate = Handlebars.compile($("#notes-template").html());
-    $("#displayNotes").html(renderNotesHTMLTemplate(notes));
-}
-
-
-// ToDo: avoid handlebars errors in edit mode
-Handlebars.registerHelper('prettyDateFormat', function (date) {
-
-    // ToDo: are there any libs for such pretty date formats?
-    var dateStr;
-    if (!date) {
-        dateStr = "Irgendwann";
-    } else {
-        // ToDo: check for today and this week
-        dateStr = date;
-    }
-    return dateStr;
-});
-
-Handlebars.registerHelper('setStatus', function (isFinished) {
-    var checked = (isFinished) ? "checked" : "";
-    return checked;
-});
-
-
-function sortAndRenderNotesByNumber(sorttype){
-
-    var arrayOfNotes = getNotes();
-    if (arrayOfNotes) {
-        //sorting the notes array
-        arrayOfNotes.sort(function(a, b) {
-            var criteriaA = a[sorttype];
-            var criteriaB = b[sorttype];
-
-            if (criteriaA > criteriaB){
-                return -1;
-            } else if (criteriaA < criteriaB){
-                return 1;
-            } else{
-                return 0; // equal
-            }
-        });
-
-        renderNotes(arrayOfNotes);
-    }
-}
-
-
-;$(function () {
-    "use strict";
-    sortAndRenderNotesByNumber("created");
-    applySkin();
-    $("#displayNotes").on("click", notesClickEventHandler);
-    $("#sorting").on("click", sortClickEventHandler);
-    $("#filter").on("click", filterClickEventHandler);
-    //$("#editor").on("click", editorClickEventHandler);
-});
-
-
-// event-handlers start
-// -- contoller --
-function notesClickEventHandler(event) {
-
-    var action = event.target.getAttribute("data-action");
-    var id = event.target.closest("li").getAttribute("id");
-
-    if (action === "edit") {
-        editNote(id);
-        return;
-    }
-    if (action === "finished") {
-        alert("ToDo: store new finished status of note " + id + " and display finished date.");
-        // ToDo: setFinishedStatus(id);
-        return;
-    }
-    if (action === "showmore") {
-        // ToDo: showMore(id);
-        alert("ToDo: show full description of note " + id);
-        return;
-    }
-    if (action === "showless") {
-        // ToDo: showLess(id);
-        alert("ToDo: show minimized description of note " + id);
-    }
-}
-
-function sortClickEventHandler(event) {
-
-    var action = event.target.getAttribute("data-sort");
-    if (action) {
-        sortAndRenderNotesByNumber(action);
-    }
-
-}
-
-
-function editorClickEventHandler(event) {
-    // ToDo: event doesn't arrive from #editor ?
-    console.log(event);
-    var action = event.target.getAttribute("data-action");
-    if (action === "deleteNote") {
-        deleteNode();
-    }
-
-}
-
-
-function filterClickEventHandler(event) {
-
-    var action = event.target.textContent;
-
-    // ToDo: Use a dropdown for filters like "show all, show open, show finished, etc. ???
-    // ToDo: Is default view without finished notes?
-    // ToDo: use id's for action type instead of button names
-
-    if (action === "Abgeschlossene anzeigen") {
-        $("#notes").find("li").each(function () {
-            $(this).removeClass("hide");
-            var isFinished = $(this).find('input[name="isFinished"]:checked').val();
-            if (!isFinished) {
-                $(this).addClass("hide");
-            }
-        });
-        $("#hide-finished").html('Offene anzeigen');
-        return;
-    }
-
-    if (action === "Offene anzeigen") {
-        $("#notes").find("li").each(function () {
-            $(this).removeClass("hide");
-            var isFinished = $(this).find('input[name="isFinished"]:checked').val();
-            if (isFinished) {
-                $(this).addClass("hide");
-            }
-        });
-        $("#hide-finished").html('Abgeschlossene anzeigen');
-    }
-}
-
-// event handlers end
-
-/*
----- GUI-functions end ----
-*/
-
-
-
-
-
-
-/*
----- Business-Functions start ----
--- Model --
-*/
-
 
 function getNotes() {
     return JSON.parse(localStorage.getItem("notes"));
@@ -207,7 +10,7 @@ function setNotes(notes) {
     localStorage.setItem("notes", JSON.stringify(notes));
 }
 
-// created is used as the unique identifier of a note
+// the created-timestamp is used as the unique identifier of a note
 function findNote(created, notes) {
     for (var i = 0; i < notes.length; i++) {
         if (notes[i].created == created) {
@@ -232,7 +35,8 @@ function getNoteKeyParameter() {
     return noteKey;
 }
 
-function setNoteValuesByNoteKeyParameter() {
+// populate form fields of the update page
+function getNoteValuesByNoteKeyParameter() {
     var note = findNote(getNoteKeyParameter(),getNotes());
     // set values to dom
     $("#title").val(note.title);
@@ -321,6 +125,3 @@ function deleteNode() {
     goto("index.html");
 }
 
-/*
---- Business-Functions end ----
-*/

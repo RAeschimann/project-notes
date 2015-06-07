@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="css/skin-default.css" type="text/css" media="all" id="skin-css">
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/handlebars-v3.0.3.js"></script>
+    <script src="js/notes.js"></script>
+    <script src="js/notes_ui.js"></script>
     <script id="notes-template" type="text/x-handlebars-template">
         <ul id="notes">
             {{#each this}}
@@ -15,7 +17,7 @@
                 <div class="title"><span>{{title}}</span></div>
                 <div class="priority"><span>Wichtigkeit: {{priority}}</span></div>
                 <div class="status">
-                    <input data-action="finished" name="isFinished" id="isFinished" type="checkbox" {{setStatus isFinished}}>
+                    <input data-action="finished" name="isFinished" id="isFinished" type="checkbox" {{setStatus isFinished}}/>
                     <label for="isFinished">Finished</label>
                 </div>
                 <div class="description"><span>{{description}} [<a data-action="showmore" class="todo" href="#">Show more</a>]</span></div>
@@ -47,6 +49,6 @@
     <button id="hide-finished">Abgeschlossene anzeigen</button>
 </div>
 <div id="displayNotes" class="row"></div>
-<script src="js/notes.js"></script>
+<script type="text/javascript">sortAndRenderNotesByNumber("created");</script>
 </body>
 </html>

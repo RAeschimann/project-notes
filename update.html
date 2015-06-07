@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <title> Notiz update</title>
     <link rel="stylesheet" href="css/notes.css" type="text/css" media="all">
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/handlebars-v3.0.3.js"></script>
+    <script src="js/notes.js"></script>
+    <script src="js/notes_ui.js"></script>
 </head>
 <body>
 <div class="edit" id="editor">
     <div class="row">
         <label for="title">Titel</label>
-        <input class="text" type="text" id="title">
+        <input class="text" type="text" id="title"/>
     </div>
     <div class="row">
         <label for="description">Beschreibung</label>
@@ -17,19 +21,19 @@
     </div>
     <div class="row">
         <label>Wichtigkeit</label>
-        <input class="radio" id="prio1" type="radio" name="priority" value="1"><label class="radio" for="prio1">1</label>
-        <input class="radio" id="prio2" type="radio" name="priority" value="2"><label class="radio" for="prio2">2</label>
-        <input class="radio" id="prio3" type="radio" name="priority" value="3"><label class="radio" for="prio3">3</label>
-        <input class="radio" id="prio4" type="radio" name="priority" value="4"><label class="radio" for="prio4">4</label>
-        <input class="radio" id="prio5" type="radio" name="priority" value="5"><label class="radio" for="prio5">5</label>
+        <input class="radio" id="prio1" type="radio" name="priority" value="1"/><label class="radio" for="prio1">1</label>
+        <input class="radio" id="prio2" type="radio" name="priority" value="2"/><label class="radio" for="prio2">2</label>
+        <input class="radio" id="prio3" type="radio" name="priority" value="3"/><label class="radio" for="prio3">3</label>
+        <input class="radio" id="prio4" type="radio" name="priority" value="4"/><label class="radio" for="prio4">4</label>
+        <input class="radio" id="prio5" type="radio" name="priority" value="5"/><label class="radio" for="prio5">5</label>
     </div>
     <div class="row">
         <label for="duedate">Erledigt bis</label>
-        <input type="date" id="duedate">
+        <input type="date" id="duedate"/>
     </div>
     <div class="row">
         <label for="isFinished">Erledigt</label>
-        <input type="checkbox" id="isFinished" name="isFinished">
+        <input type="checkbox" id="isFinished" name="isFinished"/>
     </div>
     <div class="row">
         <button onclick="updateNote()">Speichern</button>
@@ -41,8 +45,6 @@
         <button onclick="deleteNode()">Notiz löschen</button>
     </div>
 </div>
-<script src="js/jquery-1.11.3.min.js"></script>
-<script src="js/notes.js"></script>
-<script type="text/javascript">setNoteValuesByNoteKeyParameter();</script>
+<script type="text/javascript">getNoteValuesByNoteKeyParameter();</script>
 </body>
 </html>
