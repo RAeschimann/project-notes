@@ -1,4 +1,4 @@
-/*
+/**
 view functions
 */
 
@@ -60,7 +60,6 @@ function renderNotes(notes) {
     var renderNotesHTMLTemplate = Handlebars.compile($("#notes-template").html());
     $("#displayNotes").html(renderNotesHTMLTemplate(notes));
 }
-// ToDo: avoid handlebars errors in edit mode
 Handlebars.registerHelper('prettyDateFormat', function (date) {
 
     // ToDo: are there any libs for such pretty date formats?
@@ -81,7 +80,7 @@ Handlebars.registerHelper('setStatus', function (isFinished) {
 
 // sorting notes on display (non persistent)
 function sortAndRenderNotesByNumber(sorttype){
-    var arrayOfNotes = getNotes();
+    var arrayOfNotes = Notes.getNotes();
     if (arrayOfNotes) {
         //sorting the notes array
         arrayOfNotes.sort(function(a, b) {
@@ -101,7 +100,7 @@ function sortAndRenderNotesByNumber(sorttype){
 }
 
 
-/*
+/**
  controller functions
  */
 
@@ -145,7 +144,7 @@ function editorClickEventHandler(event) {
     console.log(event);
     var action = event.target.getAttribute("data-action");
     if (action === "deleteNote") {
-        deleteNode();
+        Notes.deleteNode();
     }
 
 }
