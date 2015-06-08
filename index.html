@@ -9,29 +9,10 @@
     <script src="js/handlebars-v3.0.3.js"></script>
     <script src="js/notes.js"></script>
     <script src="js/notes_ui.js"></script>
-    <script id="notes-template" type="text/x-handlebars-template">
-        <ul id="notes">
-            {{#each this}}
-            <li id="{{created}}" class="entry">
-                <div class="date"><span>{{prettyDateFormat duedate}}</span></div>
-                <div class="title"><span>{{title}}</span></div>
-                <div class="priority"><span>Wichtigkeit: {{priority}}</span></div>
-                <div class="status">
-                    <input data-action="finished" name="isFinished" id="isFinished" type="checkbox" {{setStatus isFinished}}/>
-                    <label for="isFinished">Finished</label>
-                </div>
-                <div class="description"><span>{{description}} [<a data-action="showmore" class="todo" href="#">Show more</a>]</span></div>
-                <div class="edit">
-                    <button data-action="edit">Notiz bearbeiten</button>
-                </div>
-            </li>
-            {{/each}}
-        </ul>
-    </script>
 </head>
 <body>
-<div class="row">
-    <button onclick="newNote()">Neue Notiz erstellen</button>
+<div class="row" id="toolbar">
+    <button data-action="new-note">Neue Notiz erstellen</button>
     <select onchange="changeSkin()" id="skins" name="Skins">
         <option value="skin-default">Skin Default</option>
         <option value="skin-grey">Skin Grey</option>
@@ -49,6 +30,26 @@
     <button id="hide-finished">Abgeschlossene anzeigen</button>
 </div>
 <div id="displayNotes" class="row"></div>
-<script type="text/javascript">sortAndRenderNotesByNumber("created");</script>
+<script id="notes-template" type="text/x-handlebars-template">
+    <ul id="notes">
+        {{#each this}}
+        <li id="{{created}}" class="entry">
+            <div class="date"><span>{{prettyDateFormat duedate}}</span></div>
+            <div class="title"><span>{{title}}</span></div>
+            <div class="priority"><span>Wichtigkeit: {{priority}}</span></div>
+            <div class="status">
+                <input data-action="finished" name="isFinished" id="isFinished" type="checkbox" {{setIsFinished isFinished}}/>
+                <label for="isFinished">Finished</label>
+            </div>
+            <div class="description">
+                <div class="block-ellipsis"><span>{{description}}</span></div> [<a data-action="showmore" class="showmore" href="#">Mehr anzeigen</a>]
+            </div>
+            <div class="edit">
+                <button data-action="edit-note">Notiz bearbeiten</button>
+            </div>
+        </li>
+        {{/each}}
+    </ul>
+</script>
 </body>
 </html>

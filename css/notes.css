@@ -98,6 +98,28 @@ li.entry {
     display: none;
 }
 
+/* WIP show shortened descriptions */
+.ellipsis {
+    width: 380px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+/* WIP show shortened descriptions */
+.block-ellipsis {
+    display: block;
+    display: -webkit-box;
+    max-width: 100%;
+    height: 29px;
+    margin: 0 auto;
+    font-size: 14px;
+    line-height: 1;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* just for development */
 hr {
     margin-top: 100px;

@@ -6,39 +6,47 @@ view functions
 ;$(function () {
     "use strict";
     applySkin();
-    $("#displayNotes").on("click", notesClickEventHandler);
-    $("#sorting").on("click", sortClickEventHandler);
-    $("#filter").on("click", filterClickEventHandler);
-    //$("#editor").on("click", editorClickEventHandler);
+    // check for editor or index page
+    if ((/(update)/.test(window.location.pathname))) {
+        // render editor page and register click event handlers
+        var renderEditorHTMLTemplate = Handlebars.compile($("#editor-template").html());
+        $("#editor").html(renderEditorHTMLTemplate(Notes.findNote(Notes.getNoteKeyParameter())));
+        $("#editor").on("click", editorClickEventHandler);
+    } else {
+        // render index page and register click event handlers
+        sortAndRenderNotesByNumber("created");
+        $("#toolbar").on("click", toolbarClickEventHandler);
+        $("#displayNotes").on("click", notesClickEventHandler);
+        $("#sorting").on("click", sortClickEventHandler);
+        $("#filter").on("click", filterClickEventHandler);
+    }
 });
-
 
 // navigation in between pages
 function goto(url) {
     window.location.replace(url);
 }
+
 function editNote(i) {
     /* use url parameter noteKey as a reference to a note in between pages.
     the value of noteKey is the created timestamp of a note.
     the created-timestamp of a note is used as the unique identifier (i) */
     goto("update.html?noteKey=" + i);
 }
+
 function newNote() {
     // use url parameter noteKey=0 to add a new note
     goto("update.html?noteKey=0");
 }
 
-
 //css style switching
 function changeSkin() {
     var style = $("#skins").val();
-    console.log(style +" from dom");
-
     // store in session
     sessionStorage.setItem("skin_style", style);
-
     applySkin();
 }
+
 function applySkin(){
     var style = "";
     if (sessionStorage.getItem('skin_style')){
@@ -46,20 +54,33 @@ function applySkin(){
     } else {
         style = $("#skins").val();
     }
-
     if (style) {
         $('#skin-css').attr('href', 'css/' + style + '.css');
     }
+    // set actual skin in dropdown
+    $("#skins").val(style);
 }
 
+function showMore(id) {
+    alert("ToDo: show full description of note " + id);
+    /*
+    $("#"+id).find(".block-ellipsis").each(function () {
+        $(this).removeClass("block-ellipsis");
+        $(this).addClass("showless");
+    });
+    */
+}
 
+function showLess(id) {
+    alert("ToDo: show minimized description of note " + id);
+}
 
 // rendering notes html with handlebars
 function renderNotes(notes) {
-
     var renderNotesHTMLTemplate = Handlebars.compile($("#notes-template").html());
     $("#displayNotes").html(renderNotesHTMLTemplate(notes));
 }
+
 Handlebars.registerHelper('prettyDateFormat', function (date) {
 
     // ToDo: are there any libs for such pretty date formats?
@@ -72,11 +93,16 @@ Handlebars.registerHelper('prettyDateFormat', function (date) {
     }
     return dateStr;
 });
-Handlebars.registerHelper('setStatus', function (isFinished) {
+
+Handlebars.registerHelper('setIsFinished', function (isFinished) {
     var checked = (isFinished) ? "checked" : "";
     return checked;
 });
 
+Handlebars.registerHelper('setPriority', function (priority, i) {
+    var checked = (priority == i) ? "checked" : "";
+    return checked;
+});
 
 // sorting notes on display (non persistent)
 function sortAndRenderNotesByNumber(sorttype){
@@ -106,11 +132,9 @@ function sortAndRenderNotesByNumber(sorttype){
 
 // event-handlers
 function notesClickEventHandler(event) {
-
     var action = event.target.getAttribute("data-action");
     var id = event.target.closest("li").getAttribute("id");
-
-    if (action === "edit") {
+    if (action === "edit-note") {
         editNote(id);
         return;
     }
@@ -120,33 +144,44 @@ function notesClickEventHandler(event) {
         return;
     }
     if (action === "showmore") {
-        // ToDo: showMore(id);
-        alert("ToDo: show full description of note " + id);
+        showMore(id);
         return;
     }
     if (action === "showless") {
-        // ToDo: showLess(id);
-        alert("ToDo: show minimized description of note " + id);
+        showLess(id);
+        return;
+    }
+}
+
+function toolbarClickEventHandler(event) {
+    var action = event.target.getAttribute("data-action");
+    if (action === "new-note") {
+        newNote();
+        return;
     }
 }
 
 function sortClickEventHandler(event) {
-
     var action = event.target.getAttribute("data-sort");
     if (action) {
         sortAndRenderNotesByNumber(action);
     }
-
 }
 
 function editorClickEventHandler(event) {
-    // ToDo: event doesn't arrive from #editor ?
-    console.log(event);
     var action = event.target.getAttribute("data-action");
-    if (action === "deleteNote") {
-        Notes.deleteNode();
+    if (action === "updateNote") {
+        Notes.updateNote();
+        return;
     }
-
+    if (action === "deleteNote") {
+        Notes.deleteNote();
+        return;
+    }
+    if (action === "gotoIndex") {
+        goto("index.html");
+        return;
+    }
 }
 
 function filterClickEventHandler(event) {

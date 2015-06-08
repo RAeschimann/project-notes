@@ -11,25 +11,11 @@ var Notes = (function () {
         return JSON.parse(localStorage.getItem("notes"));
     }
 
-    // populate form fields of the update page
-    function getNoteValuesByNoteKeyParameter() {
-        var note = findNote(getNoteKeyParameter(), getNotes());
-        // set values to dom
-        $("#title").val(note.title);
-        $("#description").val(note.description);
-        var prioId = "#prio" + note.priority;
-        $(prioId).prop("checked", true);
-        $("#duedate").val(note.duedate);
-        if (note.isFinished) {
-            $('input[name="isFinished"]').prop("checked", true);
-        }
-    }
-
     function updateNote() {
         // ToDo: validate input
 
         // retrieve stored values to update later
-        var noteToUpdate = findNote(getNoteKeyParameter(), getNotes());
+        var noteToUpdate = findNote(getNoteKeyParameter());
 
         // new note
         if (typeof noteToUpdate.created == 'undefined') { // no existing note found, create a new note
@@ -52,7 +38,7 @@ var Notes = (function () {
 
             // add updated note to notes Object
             var notes = getNotes();
-            notes[findNoteIndex(getNoteKeyParameter(), notes)] = noteToUpdate;
+            notes[findNoteIndex(getNoteKeyParameter())] = noteToUpdate;
 
             // save updated notes
             setNotes(notes);
@@ -64,21 +50,29 @@ var Notes = (function () {
     function deleteNote() {
         // retrieve stored notes
         var notes = getNotes();
-        notes.splice(findNoteIndex(getNoteKeyParameter(), notes), 1);
+        notes.splice(findNoteIndex(getNoteKeyParameter()), 1);
         // save updated notes
         setNotes(notes);
         goto("index.html");
     }
 
+    function getNoteKeyParameter() {
+        // get i from url - parameter "noteKey"
+        var notekey = 0;
+        try {
+            noteKey = decodeURIComponent(window.location.search.match(/(\?|&)noteKey\=([^&]*)/)[2]);
+            // check if note key is a valid timestamp (positiv integer)
+            notekey = (/^\+?\d+$/.test(noteKey)) ? noteKey : 0;
+        } catch (err) {
+            console.log(err);
+        }
 
-    /* private functions */
-
-    function setNotes(notes) {
-        localStorage.setItem("notes", JSON.stringify(notes));
+        return notekey;
     }
 
     // the created-timestamp is used as the unique identifier of a note
-    function findNote(created, notes) {
+    function findNote(created) {
+        var notes = getNotes();
         if (notes) {
             for (var i = 0; i < notes.length; i++) {
                 if (notes[i].created == created) {
@@ -89,7 +83,15 @@ var Notes = (function () {
         return {};
     }
 
-    function findNoteIndex(created, notes) {
+    /* private functions */
+
+    function setNotes(notes) {
+        localStorage.setItem("notes", JSON.stringify(notes));
+    }
+
+
+    function findNoteIndex(created) {
+        var notes = getNotes();
         for (var i = 0; i < notes.length; i++) {
             if (notes[i].created == created) {
                 return i;
@@ -98,11 +100,6 @@ var Notes = (function () {
         return {};
     }
 
-    function getNoteKeyParameter() {
-        // get i from url - parameter "noteKey"
-        var noteKey = decodeURIComponent(window.location.search.match(/(\?|&)noteKey\=([^&]*)/)[2]);
-        return noteKey;
-    }
 
     function addNewNote() {
         // ToDo: validate input
@@ -136,7 +133,8 @@ var Notes = (function () {
     // public accessible functions
     return {
         getNotes: getNotes,
-        getNoteValuesByNoteKeyParameter: getNoteValuesByNoteKeyParameter,
+        findNote: findNote,
+        getNoteKeyParameter: getNoteKeyParameter,
         updateNote: updateNote,
         deleteNote: deleteNote
     };
