@@ -81,7 +81,7 @@ function renderNotes(notes) {
     $("#displayNotes").html(renderNotesHTMLTemplate(notes));
 }
 
-Handlebars.registerHelper('prettyDateFormat', function (date) {
+Handlebars.registerHelper("prettyDateFormat", function (date) {
 
     // ToDo: are there any libs for such pretty date formats?
     var dateStr;
@@ -89,20 +89,30 @@ Handlebars.registerHelper('prettyDateFormat', function (date) {
         dateStr = "Irgendwann";
     } else {
         // ToDo: check for today and this week
-        dateStr = date;
+        // ToDo: use moments.js for date formatting
+        var d = new Date(date);
+        dateStr  = d.getDate() + "." + (d.getMonth()+1)+ "."+d.getFullYear();
     }
     return dateStr;
 });
 
-Handlebars.registerHelper('setIsFinished', function (isFinished) {
+Handlebars.registerHelper("setIsFinished", function (isFinished) {
     var checked = (isFinished) ? "checked" : "";
     return checked;
 });
 
-Handlebars.registerHelper('setPriority', function (priority, i) {
+Handlebars.registerHelper("setPriority", function (priority, i) {
     var checked = (priority == i) ? "checked" : "";
     return checked;
 });
+
+Handlebars.registerHelper("prettifyTimestamp", function (timestamp) {
+    // ToDo: use moments.js for date formatting
+    var d = new Date(timestamp);
+    var dateStr  = d.getDate() + "." + (d.getMonth()+1)+ "."+d.getFullYear();
+    return dateStr;
+});
+
 
 // sorting notes on display (non persistent)
 function sortAndRenderNotesByNumber(sorttype){
@@ -139,8 +149,8 @@ function notesClickEventHandler(event) {
         return;
     }
     if (action === "finished") {
-        alert("ToDo: store new finished status of note " + id + " and display finished date.");
-        // ToDo: setFinishedStatus(id);
+        Notes.changeStatus(id);
+        sortAndRenderNotesByNumber("created");
         return;
     }
     if (action === "showmore") {
@@ -186,13 +196,12 @@ function editorClickEventHandler(event) {
 
 function filterClickEventHandler(event) {
 
-    var action = event.target.textContent;
+    var action = event.target.getAttribute("id");
 
-    // ToDo: Use a dropdown for filters like "show all, show open, show finished, etc. ???
-    // ToDo: Is default view without finished notes?
-    // ToDo: use id's for action type instead of button names
+    // ToDo: display default view without finished notes
+    // ToDo: create a function for calling this filter from other methods
 
-    if (action === "Abgeschlossene anzeigen") {
+    if (action === "show-finished") {
         $("#notes").find("li").each(function () {
             $(this).removeClass("hide");
             var isFinished = $(this).find('input[name="isFinished"]:checked').val();
@@ -200,11 +209,12 @@ function filterClickEventHandler(event) {
                 $(this).addClass("hide");
             }
         });
-        $("#hide-finished").html('Offene anzeigen');
+        $("#show-finished").addClass("hide");
+        $("#hide-finished").removeClass("hide");
         return;
     }
 
-    if (action === "Offene anzeigen") {
+    if (action === "hide-finished") {
         $("#notes").find("li").each(function () {
             $(this).removeClass("hide");
             var isFinished = $(this).find('input[name="isFinished"]:checked').val();
@@ -212,6 +222,7 @@ function filterClickEventHandler(event) {
                 $(this).addClass("hide");
             }
         });
-        $("#hide-finished").html('Abgeschlossene anzeigen');
+        $("#hide-finished").addClass("hide");
+        $("#show-finished").removeClass("hide");
     }
 }

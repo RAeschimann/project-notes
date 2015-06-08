@@ -37,11 +37,7 @@ var Notes = (function () {
             }
 
             // add updated note to notes Object
-            var notes = getNotes();
-            notes[findNoteIndex(getNoteKeyParameter())] = noteToUpdate;
-
-            // save updated notes
-            setNotes(notes);
+            updateNotes(getNoteKeyParameter(), noteToUpdate);
 
             goto("index.html");
         }
@@ -81,6 +77,22 @@ var Notes = (function () {
             }
         }
         return {};
+    }
+
+    function changeStatus(id) {
+        var note = findNote(id);
+        if (!note.isFinished) {
+            // set finished status
+            note.isFinished = true;
+            note.finished = new Date().getTime();
+        } else {
+            // reset finished status
+            note.isFinished = false;
+            note.finished = 0;
+        }
+
+        updateNotes(id, note);
+
     }
 
     /* private functions */
@@ -129,6 +141,17 @@ var Notes = (function () {
         goto("index.html");
     }
 
+    function updateNotes(id, note) {
+
+        // add updated note to notes Object
+        var notes = getNotes();
+        notes[findNoteIndex(id)] = note;
+
+        // save updated notes
+        setNotes(notes);
+
+    }
+
 
     // public accessible functions
     return {
@@ -136,7 +159,8 @@ var Notes = (function () {
         findNote: findNote,
         getNoteKeyParameter: getNoteKeyParameter,
         updateNote: updateNote,
-        deleteNote: deleteNote
+        deleteNote: deleteNote,
+        changeStatus: changeStatus
     };
 
 })();

@@ -27,22 +27,23 @@
 </div>
 <div class="row filter" id="filter">
     <span>Filter:</span>
-    <button id="hide-finished">Abgeschlossene anzeigen</button>
+    <button id="show-finished">Abgeschlossene anzeigen</button>
+    <button id="hide-finished" class="hide">Offene anzeigen</button>
 </div>
 <div id="displayNotes" class="row"></div>
 <script id="notes-template" type="text/x-handlebars-template">
     <ul id="notes">
         {{#each this}}
         <li id="{{created}}" class="entry">
-            <div class="date"><span>{{prettyDateFormat duedate}}</span></div>
+            <div class="date"><span>Termin: {{prettyDateFormat duedate}}</span></div>
             <div class="title"><span>{{title}}</span></div>
             <div class="priority"><span>Wichtigkeit: {{priority}}</span></div>
             <div class="status">
                 <input data-action="finished" name="isFinished" id="isFinished" type="checkbox" {{setIsFinished isFinished}}/>
-                <label for="isFinished">Finished</label>
+                <label for="isFinished">Abgeschlossen{{#if isFinished}} am {{prettifyTimestamp finished}}{{/if}}</label>
             </div>
             <div class="description">
-                <div class="block-ellipsis"><span>{{description}}</span></div> [<a data-action="showmore" class="showmore" href="#">Mehr anzeigen</a>]
+                <div class="block-ellipsis"><span>{{description}}</span></div> [<a data-action="showmore" class="todo showmore" href="#">Mehr anzeigen</a>]
             </div>
             <div class="edit">
                 <button data-action="edit-note">Notiz bearbeiten</button>
