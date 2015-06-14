@@ -1,9 +1,10 @@
 /**
-view functions
-*/
+ view functions
+ */
 
 // function is called once all the DOM elements of the page are ready to be used
-;$(function () {
+;
+$(function () {
     "use strict";
     applySkin();
     // check for editor or index page
@@ -14,7 +15,7 @@ view functions
         $("#editor").on("click", editorClickEventHandler);
     } else {
         // render index page and register click event handlers
-        sortAndRenderNotesByNumber("created");
+        sortAndRenderNotesByNumber("created", "number", "desc");
         $("#toolbar").on("click", toolbarClickEventHandler);
         $("#displayNotes").on("click", notesClickEventHandler);
         $("#sorting").on("click", sortClickEventHandler);
@@ -29,8 +30,8 @@ function goto(url) {
 
 function editNote(i) {
     /* use url parameter noteKey as a reference to a note in between pages.
-    the value of noteKey is the created timestamp of a note.
-    the created-timestamp of a note is used as the unique identifier (i) */
+     the value of noteKey is the created timestamp of a note.
+     the created-timestamp of a note is used as the unique identifier (i) */
     goto("update.html?noteKey=" + i);
 }
 
@@ -47,9 +48,9 @@ function changeSkin() {
     applySkin();
 }
 
-function applySkin(){
+function applySkin() {
     var style = "";
-    if (sessionStorage.getItem('skin_style')){
+    if (sessionStorage.getItem('skin_style')) {
         style = sessionStorage.getItem('skin_style');
     } else {
         style = $("#skins").val();
@@ -64,11 +65,11 @@ function applySkin(){
 function showMore(id) {
     alert("ToDo: show full description of note " + id);
     /*
-    $("#"+id).find(".block-ellipsis").each(function () {
-        $(this).removeClass("block-ellipsis");
-        $(this).addClass("showless");
-    });
-    */
+     $("#"+id).find(".block-ellipsis").each(function () {
+     $(this).removeClass("block-ellipsis");
+     $(this).addClass("showless");
+     });
+     */
 }
 
 function showLess(id) {
@@ -81,9 +82,20 @@ function renderNotes(notes) {
     $("#displayNotes").html(renderNotesHTMLTemplate(notes));
 }
 
+/* display note in list only when filter and status match */
+Handlebars.registerHelper("checkFilter", function (isFinished) {
+    var showFinishedNotes = $("#show-finished").hasClass("hide");
+    var showOpenNotes = $("#hide-finished").hasClass("hide");
+    var cssClass = " hide";
+    if ((showFinishedNotes && isFinished) || (showOpenNotes && !isFinished)) {
+        cssClass = "";
+    }
+    return cssClass;
+});
+
 Handlebars.registerHelper("prettyDateFormat", function (date, type) {
     var dateStr = "";
-    if (!date && type==="due") {
+    if (!date && type === "due") {
         dateStr = "Irgendwann";
     } else {
         moment.locale('de');
@@ -104,22 +116,44 @@ Handlebars.registerHelper("setPriority", function (priority, i) {
 });
 
 
-
 // sorting notes on display (non persistent)
-function sortAndRenderNotesByNumber(sorttype){
+function sortAndRenderNotesByNumber(sortproperty, type, order) {
     var arrayOfNotes = Notes.getNotes();
     if (arrayOfNotes) {
         //sorting the notes array
-        arrayOfNotes.sort(function(a, b) {
-            var criteriaA = a[sorttype];
-            var criteriaB = b[sorttype];
+        arrayOfNotes.sort(function (a, b) {
+            var criteriaA = a[sortproperty];
+            var criteriaB = b[sortproperty];
+            if (type === "number") {
+                switch(order) {
+                    case "desc":
+                        return criteriaB - criteriaA;
+                        break;
+                    default:
+                        return criteriaA - criteriaB;
+                }
+            } else {
+                switch(order) {
+                    case "desc":
+                        if (criteriaB > criteriaA) {
+                            return -1;
+                        } else if (criteriaB < criteriaA) {
+                            return 1;
+                        } else {
+                            return 0; // equal
+                        }
+                        break;
+                    default:
+                        if (criteriaA > criteriaB) {
+                            return -1;
+                        } else if (criteriaA < criteriaB) {
+                            return 1;
+                        } else {
+                            return 0; // equal
+                        }
 
-            if (criteriaA > criteriaB){
-                return -1;
-            } else if (criteriaA < criteriaB){
-                return 1;
-            } else{
-                return 0; // equal
+                }
+
             }
         });
         renderNotes(arrayOfNotes);
@@ -141,7 +175,7 @@ function notesClickEventHandler(event) {
     }
     if (action === "finished") {
         Notes.changeStatus(id);
-        sortAndRenderNotesByNumber("created");
+        sortAndRenderNotesByNumber("created", "number", "desc");
         return;
     }
     if (action === "showmore") {
@@ -164,9 +198,15 @@ function toolbarClickEventHandler(event) {
 
 function sortClickEventHandler(event) {
     var target = event.target;
-    var action = target.getAttribute("data-sort");
+    var action = target.getAttribute("id");
     if (action) {
-        sortAndRenderNotesByNumber(action);
+        var type = "number";
+        var order = "desc";
+        if (action === "duedate") {
+            type = "String";
+            order = "desc";
+        }
+        sortAndRenderNotesByNumber(action, type, order);
         $(target).addClass("active");
         $(target).siblings().removeClass("active");
     }
@@ -191,32 +231,33 @@ function editorClickEventHandler(event) {
 function filterClickEventHandler(event) {
 
     var action = event.target.getAttribute("id");
+    var CSSCLASSHIDE = "hide";
 
-    // ToDo: display default view without finished notes
-    // ToDo: create a function for calling this filter from other methods
+    $("#notes").find("li").each(function () {
+        $(this).removeClass(CSSCLASSHIDE);
+        var isFinished = $(this).find('input[name="isFinished"]:checked').val();
 
-    if (action === "show-finished") {
-        $("#notes").find("li").each(function () {
-            $(this).removeClass("hide");
-            var isFinished = $(this).find('input[name="isFinished"]:checked').val();
+        if (action === "show-finished") {
             if (!isFinished) {
-                $(this).addClass("hide");
+                $(this).addClass(CSSCLASSHIDE);
             }
-        });
-        $("#show-finished").addClass("hide");
-        $("#hide-finished").removeClass("hide");
-        return;
-    }
+            // reset filter and sort buttons
+            $("#show-finished").addClass(CSSCLASSHIDE);
+            $("#hide-finished").removeClass(CSSCLASSHIDE);
+            $("#duedate").addClass(CSSCLASSHIDE);
+            $("#finished").removeClass(CSSCLASSHIDE);
 
-    if (action === "hide-finished") {
-        $("#notes").find("li").each(function () {
-            $(this).removeClass("hide");
-            var isFinished = $(this).find('input[name="isFinished"]:checked').val();
+        } else if (action === "hide-finished") {
             if (isFinished) {
-                $(this).addClass("hide");
+                $(this).addClass(CSSCLASSHIDE);
             }
-        });
-        $("#hide-finished").addClass("hide");
-        $("#show-finished").removeClass("hide");
-    }
+            // reset filter and sort buttons
+            $("#show-finished").removeClass(CSSCLASSHIDE);
+            $("#hide-finished").addClass(CSSCLASSHIDE);
+            $("#duedate").removeClass(CSSCLASSHIDE);
+            $("#finished").addClass(CSSCLASSHIDE);
+        }
+
+    });
+
 }

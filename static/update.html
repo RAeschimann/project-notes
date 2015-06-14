@@ -13,43 +13,48 @@
 <body>
 <div class="edit" id="editor">
     <script id="editor-template" type="text/x-handlebars-template">
-    <div class="row">
-        <label for="title">Titel</label>
-        <input class="text" type="text" id="title" value="{{title}}"/>
-    </div>
-    <div class="row">
-        <label for="description">Beschreibung</label>
-        <textarea name="description" id="description" rows="10" cols="30">{{description}}</textarea>
-    </div>
-    <div class="row">
-        <label>Wichtigkeit</label>
-        <input class="radio" id="prio1" type="radio" name="priority" value="1" {{setPriority priority 1}}/><label class="radio" for="prio1">1</label>
-        <input class="radio" id="prio2" type="radio" name="priority" value="2" {{setPriority priority 2}}/><label class="radio" for="prio2">2</label>
-        <input class="radio" id="prio3" type="radio" name="priority" value="3" {{setPriority priority 3}}/><label class="radio" for="prio3">3</label>
-        <input class="radio" id="prio4" type="radio" name="priority" value="4" {{setPriority priority 4}}/><label class="radio" for="prio4">4</label>
-        <input class="radio" id="prio5" type="radio" name="priority" value="5" {{setPriority priority 5}}/><label class="radio" for="prio5">5</label>
-    </div>
-    <div class="row">
-        <label for="duedate">Erledigt bis</label>
-        <input type="date" id="duedate" value="{{duedate}}"/>
-    </div>
-    {{#if created}}
-    <div class="row">
-        <label for="isFinished">Erledigt</label>
-        <input type="checkbox" id="isFinished" name="isFinished" {{setIsFinished isFinished}}/>
-    </div>
-    {{/if}}
-    <div class="row">
-        <button data-action="updateNote">{{#unless created}}Neue {{/unless}}Notiz speichern</button>
-    </div>
-    <div class="row">
-        <button data-action="gotoIndex">Zurück zur Übersicht</button>
-    </div>
-    {{#if created}}
-    <div class="row">
-        <button data-action="deleteNote">Notiz löschen</button>
-    </div>
-    {{/if}}
+        <div class="row">
+            <label for="title">Titel</label>
+            <input class="text" type="text" id="title" value="{{title}}"/>
+        </div>
+        <div class="row">
+            <label for="description">Beschreibung</label>
+            <textarea name="description" id="description" rows="10" cols="30">{{description}}</textarea>
+        </div>
+        <div class="row">
+            <label>Wichtigkeit</label>
+            <input class="radio" id="prio1" type="radio" name="priority" value="1" {{setPriority priority
+                   1}}/><label class="radio" for="prio1">1</label>
+            <input class="radio" id="prio2" type="radio" name="priority" value="2" {{setPriority priority
+                   2}}/><label class="radio" for="prio2">2</label>
+            <input class="radio" id="prio3" type="radio" name="priority" value="3" {{setPriority priority
+                   3}}/><label class="radio" for="prio3">3</label>
+            <input class="radio" id="prio4" type="radio" name="priority" value="4" {{setPriority priority
+                   4}}/><label class="radio" for="prio4">4</label>
+            <input class="radio" id="prio5" type="radio" name="priority" value="5" {{setPriority priority
+                   5}}/><label class="radio" for="prio5">5</label>
+        </div>
+        <div class="row">
+            <label for="duedate">Erledigt bis</label>
+            <input type="date" id="duedate" value="{{duedate}}"/>
+        </div>
+        {{#if created}}
+        <div class="row">
+            <label for="isFinished">Erledigt</label>
+            <input type="checkbox" id="isFinished" name="isFinished" {{setIsFinished isFinished}}/>
+        </div>
+        {{/if}}
+        <div class="row">
+            <button data-action="updateNote">{{#unless created}}Neue {{/unless}}Notiz speichern</button>
+        </div>
+        <div class="row">
+            <button data-action="gotoIndex">Zurück zur Übersicht</button>
+        </div>
+        {{#if created}}
+        <div class="row">
+            <button data-action="deleteNote">Notiz löschen</button>
+        </div>
+        {{/if}}
     </script>
 </div>
 </body>

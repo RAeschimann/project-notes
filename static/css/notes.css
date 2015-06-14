@@ -4,6 +4,10 @@ body {
     font-family: sans-serif;
 }
 
+.container {
+    min-width: 900px;
+}
+
 .hide {
     display: none;
 }
@@ -16,13 +20,15 @@ body {
 
 /* styles for actions */
 
-.row.sorting {
+.row.filter {
     float: left;
 }
 
-.row.filter {
+.row.sorting {
 
 }
+
+
 
 .sorting button:hover, .sorting button.active {
     background: #a9a9a9;
