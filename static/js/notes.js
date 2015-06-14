@@ -99,6 +99,16 @@ var Notes = (function () {
 
     function setNotes(notes) {
         localStorage.setItem("notes", JSON.stringify(notes));
+
+        alert("passing localstore-data to server (file: notes.json) via ajax post");
+        $.ajax({
+            type: "POST",
+            url: "/storeNotesOnServer",
+            data: JSON.stringify(notes),
+            success: function(data) { alert('data posted'); },
+            contentType: "application/json",
+            dataType: 'json'
+        });
     }
 
 
