@@ -1,0 +1,17 @@
+{
+  "name": "project-notes",
+  "version": "1.0.0",
+  "description": "Static webserver",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RAeschimann/project-notes.git"
+  },
+  "author": "R. Aeschimann E. Uenala",
+  "license": "MIT",
+  "homepage": "https://github.com/RAeschimann/project-notes.git",
+  "dependencies": {
+    "finalhandler": "^0.3.6",
+    "serve-static": "^1.9.2"
+  }
+}

@@ -36,3 +36,25 @@ Dazu auch
 Sonstiges
 - Projektstruktur
 - JavaScript Errors
+
+
+## Aufsetzen
+
+```bash
+# Repo klonen
+git clone https://github.com/RAeschimann/project-notes.git
+
+# In Verzeichnis wechseln
+cd project-notes
+
+# NPM-Dependencies installieren (in package.json definiert)
+npm i
+```
+
+## Webserver starten
+
+```bash
+node index.js
+```
+
+Im Browser unter http://localhost:3000 erreichbar.
