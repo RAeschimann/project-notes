@@ -153,7 +153,6 @@ var Notes = (function () {
 
     }
 
-
     // public accessible functions
     return {
         getNotes: getNotes,
