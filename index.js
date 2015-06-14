@@ -12,11 +12,12 @@ var serve = serveStatic("static/"),
 
         // TODO wouldn't it be king-size-deluxe if we made the api restful with express-module?
 		if(req.url == "/getNotesFromServer"){
-			res.writeHead(200, {'Content-Type': 'text/json'});
+            // console.log("read notes from server called");
+            res.writeHead(200, {'Content-Type': 'text/json'});
 			var stream = fs.createReadStream("./notes.json" );
 			stream.pipe(res);
 		} else if(req.url == "/storeNotesOnServer"){
-            console.log("store on server called from client");
+            // console.log("store on server called");
             var body = "";
             req.on('data', function (chunk) {
                 body += chunk;
@@ -25,7 +26,7 @@ var serve = serveStatic("static/"),
                 res.end();
                 fs.writeFile('notes.json', body , function (err) {
                     if (err) return console.log(err);
-                    console.log('recieved via post: ' + body);
+                    // console.log('recieved via post: ' + body);
                 });
 
             });

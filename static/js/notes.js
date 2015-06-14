@@ -8,6 +8,10 @@
 var Notes = (function () {
 
     function getNotes() {
+        $.getJSON("/getNotesFromServer",function(notes){
+        console.log("get notes from server and save them to localstorage");
+        localStorage.setItem("notes", JSON.stringify(notes));
+        });
         return JSON.parse(localStorage.getItem("notes"));
     }
 
@@ -99,17 +103,17 @@ var Notes = (function () {
     /* private functions */
 
     function setNotes(notes) {
-        localStorage.setItem("notes", JSON.stringify(notes));
 
-        alert("passing localstore-data to server (file: notes.json) via ajax post");
+        // send notes to server
         $.ajax({
             type: "POST",
             url: "/storeNotesOnServer",
             data: JSON.stringify(notes),
-            success: function(data) { alert('data posted'); },
+            success: function(data) { console.log('data posted'); },
             contentType: "application/json",
             dataType: 'json'
         });
+        localStorage.setItem("notes", JSON.stringify(notes));
     }
 
 

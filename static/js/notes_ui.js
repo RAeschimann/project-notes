@@ -25,7 +25,7 @@ $(function () {
 
 // navigation in between pages
 function goto(url) {
-    window.location.replace(url);
+    window.location = url;
 }
 
 function editNote(i) {
