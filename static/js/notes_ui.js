@@ -81,17 +81,14 @@ function renderNotes(notes) {
     $("#displayNotes").html(renderNotesHTMLTemplate(notes));
 }
 
-Handlebars.registerHelper("prettyDateFormat", function (date) {
-
-    // ToDo: are there any libs for such pretty date formats?
-    var dateStr;
-    if (!date) {
+Handlebars.registerHelper("prettyDateFormat", function (date, type) {
+    var dateStr = "";
+    if (!date && type==="due") {
         dateStr = "Irgendwann";
     } else {
-        // ToDo: check for today and this week
-        // ToDo: use moments.js for date formatting
-        var d = new Date(date);
-        dateStr  = d.getDate() + "." + (d.getMonth()+1)+ "."+d.getFullYear();
+        moment.locale('de');
+        var d = moment(date);
+        dateStr = d.fromNow();
     }
     return dateStr;
 });
@@ -106,12 +103,6 @@ Handlebars.registerHelper("setPriority", function (priority, i) {
     return checked;
 });
 
-Handlebars.registerHelper("prettifyTimestamp", function (timestamp) {
-    // ToDo: use moments.js for date formatting
-    var d = new Date(timestamp);
-    var dateStr  = d.getDate() + "." + (d.getMonth()+1)+ "."+d.getFullYear();
-    return dateStr;
-});
 
 
 // sorting notes on display (non persistent)

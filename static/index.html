@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/skin-default.css" type="text/css" media="all" id="skin-css">
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/handlebars-v3.0.3.js"></script>
+    <script src="js/moment-with-locales.min.js"></script>
     <script src="js/notes.js"></script>
     <script src="js/notes_ui.js"></script>
 </head>
@@ -35,12 +36,12 @@
     <ul id="notes">
         {{#each this}}
         <li id="{{created}}" class="entry">
-            <div class="date"><span>Termin: {{prettyDateFormat duedate}}</span></div>
+            <div class="date"><span>Termin: {{prettyDateFormat duedate "due"}}</span></div>
             <div class="title"><span>{{title}}</span></div>
             <div class="priority"><span>Wichtigkeit: {{priority}}</span></div>
             <div class="status">
                 <input data-action="finished" name="isFinished" id="isFinished" type="checkbox" {{setIsFinished isFinished}}/>
-                <label for="isFinished">Abgeschlossen{{#if isFinished}} am {{prettifyTimestamp finished}}{{/if}}</label>
+                <label for="isFinished">Abgeschlossen{{#if isFinished}} {{prettyDateFormat finished}}{{/if}}</label>
             </div>
             <div class="description">
                 <div class="block-ellipsis"><span>{{description}}</span></div> [<a data-action="showmore" class="todo showmore" href="#">Mehr anzeigen</a>]
