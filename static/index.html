@@ -7,50 +7,56 @@
     <link rel="stylesheet" href="css/skin-default.css" type="text/css" media="all" id="skin-css">
     <script src="js/jquery-1.11.3.min.js"></script>
     <script src="js/handlebars-v3.0.3.js"></script>
+    <script src="js/moment-with-locales.min.js"></script>
     <script src="js/notes.js"></script>
     <script src="js/notes_ui.js"></script>
 </head>
 <body>
-<div class="row" id="toolbar">
-    <button data-action="new-note">Neue Notiz erstellen</button>
-    <select onchange="changeSkin()" id="skins" name="Skins">
-        <option value="skin-default">Skin Default</option>
-        <option value="skin-grey">Skin Grey</option>
-        <option value="skin-green">Skin Green</option>
-    </select>
+<div class="container">
+    <div class="row" id="toolbar">
+        <button data-action="new-note">Neue Notiz erstellen</button>
+        <select onchange="changeSkin()" id="skins" name="Skins">
+            <option value="skin-default">Skin Default (funktional)</option>
+            <option value="skin-grey">Skin Grey</option>
+            <option value="skin-green">Skin Green</option>
+        </select>
+    </div>
+    <div class="row filter" id="filter">
+        <span>Filtern nach:</span>
+        <button id="show-finished">Nur Abgeschlossene anzeigen</button>
+        <button id="hide-finished" class="hide">Nur Offene anzeigen</button>
+    </div>
+    <div class="row sorting" id="sorting">
+        <span>Sortieren nach:</span>
+        <button id="duedate">Termin Datum</button>
+        <button id="finished" class="hide">Erledigt Datum</button>
+        <button id="created" class="active">Erstellt Datum</button>
+        <button id="priority">Wichtigkeit</button>
+    </div>
+    <div id="displayNotes" class="row"></div>
+    <script id="notes-template" type="text/x-handlebars-template">
+        <ul id="notes">
+            {{#each this}}
+            <li id="{{created}}" class="entry{{checkFilter isFinished}}">
+                <div class="date"><span>Termin: {{prettyDateFormat duedate "due"}}</span></div>
+                <div class="title"><span>{{title}}</span> ({{prettyDateFormat created}})</div>
+                <div class="priority"><span>Wichtigkeit: {{priority}}</span></div>
+                <div class="status">
+                    <input data-action="finished" name="isFinished" id="isFinished" type="checkbox" {{setIsFinished
+                           isFinished}}/>
+                    <label for="isFinished">Abgeschlossen{{#if isFinished}} {{prettyDateFormat finished}}{{/if}}</label>
+                </div>
+                <div class="description">
+                    <div class="block-ellipsis"><span>{{description}}</span></div>
+                    [<a data-action="showmore" class="todo showmore" href="#">Mehr anzeigen</a>]
+                </div>
+                <div class="edit">
+                    <button data-action="edit-note">Notiz bearbeiten</button>
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+    </script>
 </div>
-<div class="row sorting" id="sorting">
-    <span>Sortieren nach:</span>
-    <button data-sort="finished">Erledigt Datum</button>
-    <button data-sort="created">Erstellt Datum</button>
-    <button data-sort="priority">Wichtigkeit</button>
-</div>
-<div class="row filter" id="filter">
-    <span>Filter:</span>
-    <button id="show-finished">Abgeschlossene anzeigen</button>
-    <button id="hide-finished" class="hide">Offene anzeigen</button>
-</div>
-<div id="displayNotes" class="row"></div>
-<script id="notes-template" type="text/x-handlebars-template">
-    <ul id="notes">
-        {{#each this}}
-        <li id="{{created}}" class="entry">
-            <div class="date"><span>Termin: {{prettyDateFormat duedate}}</span></div>
-            <div class="title"><span>{{title}}</span></div>
-            <div class="priority"><span>Wichtigkeit: {{priority}}</span></div>
-            <div class="status">
-                <input data-action="finished" name="isFinished" id="isFinished" type="checkbox" {{setIsFinished isFinished}}/>
-                <label for="isFinished">Abgeschlossen{{#if isFinished}} am {{prettifyTimestamp finished}}{{/if}}</label>
-            </div>
-            <div class="description">
-                <div class="block-ellipsis"><span>{{description}}</span></div> [<a data-action="showmore" class="todo showmore" href="#">Mehr anzeigen</a>]
-            </div>
-            <div class="edit">
-                <button data-action="edit-note">Notiz bearbeiten</button>
-            </div>
-        </li>
-        {{/each}}
-    </ul>
-</script>
 </body>
 </html>
