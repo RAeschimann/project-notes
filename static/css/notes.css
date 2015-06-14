@@ -1,10 +1,20 @@
+/* global styles for display and editor */
+
 body {
     font-family: sans-serif;
 }
 
+.hide {
+    display: none;
+}
+
 .row {
     padding: 10px;
+    min-height: 35px;
 }
+
+
+/* styles for actions */
 
 .row.sorting {
     float: left;
@@ -14,32 +24,13 @@ body {
 
 }
 
-
-.edit .row {
-    clear: both;
+.sorting button:hover, .sorting button.active {
+    background: #a9a9a9;
+    text-decoration: none;
 }
 
-.edit label {
-    display: block;
-    width: 150px;
-    float: left;
 
-}
-
-.edit input.radio {
-    float: left;
-    margin-right: 6px;
-}
-
-.edit label.radio {
-    display: inline;
-    width: 20px;
-    text-align: left;
-}
-
-.edit input.text {
-    width: 200px;
-}
+/* styles for displaying note entries */
 
 li.entry {
     -webkit-padding-start: 0px;
@@ -94,9 +85,35 @@ li.entry {
     float: left;
 }
 
-.hide {
-    display: none;
+
+/* style for the note editor page */
+
+.edit .row {
+    clear: both;
 }
+
+.edit label {
+    display: block;
+    width: 150px;
+    float: left;
+
+}
+
+.edit input.radio {
+    float: left;
+    margin-right: 6px;
+}
+
+.edit label.radio {
+    display: inline;
+    width: 20px;
+    text-align: left;
+}
+
+.edit input.text {
+    width: 200px;
+}
+
 
 /* WIP show shortened descriptions */
 .ellipsis {
@@ -121,10 +138,6 @@ li.entry {
 }
 
 /* just for development */
-hr {
-    margin-top: 100px;
-    clear: both;
-}
 
 .todo {
     background-color: aquamarine;

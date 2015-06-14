@@ -163,9 +163,12 @@ function toolbarClickEventHandler(event) {
 }
 
 function sortClickEventHandler(event) {
-    var action = event.target.getAttribute("data-sort");
+    var target = event.target;
+    var action = target.getAttribute("data-sort");
     if (action) {
         sortAndRenderNotesByNumber(action);
+        $(target).addClass("active");
+        $(target).siblings().removeClass("active");
     }
 }
 

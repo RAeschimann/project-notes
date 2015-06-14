@@ -18,7 +18,7 @@ var Notes = (function () {
         var noteToUpdate = findNote(getNoteKeyParameter());
 
         // new note
-        if (typeof noteToUpdate.created == 'undefined') { // no existing note found, create a new note
+        if (typeof noteToUpdate.created === 'undefined') { // no existing note found, create a new note
             addNewNote();
         } else {
 
@@ -33,6 +33,7 @@ var Notes = (function () {
                 noteToUpdate.finished = new Date().getTime();
             } else {
                 // reset finished date
+                noteToUpdate.isFinished = false;
                 noteToUpdate.finished = 0;
             }
 
