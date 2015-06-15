@@ -15,7 +15,7 @@ $(function () {
         $("#editor").on("click", editorClickEventHandler);
     } else {
         // render index page and register click event handlers
-        sortAndRenderNotesByNumber("created", "number", "desc");
+        sortAndRenderNotesByNumber("created", "date", "desc");
         $("#toolbar").on("click", toolbarClickEventHandler);
         $("#displayNotes").on("click", notesClickEventHandler);
         $("#sorting").on("click", sortClickEventHandler);
@@ -131,6 +131,17 @@ function sortAndRenderNotesByNumber(sortproperty, type, order) {
             var criteriaA = a[sortproperty];
             var criteriaB = b[sortproperty];
             if (type === "number") {
+                switch (order) {
+                    case "desc":
+                        return criteriaB - criteriaA;
+                        break;
+                    default:
+                        return criteriaA - criteriaB;
+                }
+            } else if (type === "date") {
+                // convert date to a timestamp, set NaN to infinity and sort these values as numbers
+                criteriaA = isNaN(moment(criteriaA).valueOf()) ? Infinity : moment(criteriaA).valueOf();
+                criteriaB = isNaN(moment(criteriaB).valueOf()) ? Infinity : moment(criteriaB).valueOf();
                 switch(order) {
                     case "desc":
                         return criteriaB - criteriaA;
@@ -157,9 +168,7 @@ function sortAndRenderNotesByNumber(sortproperty, type, order) {
                         } else {
                             return 0; // equal
                         }
-
                 }
-
             }
         });
         renderNotes(arrayOfNotes);
@@ -181,7 +190,7 @@ function notesClickEventHandler(event) {
     }
     if (action === "finished") {
         Notes.changeStatus(id);
-        sortAndRenderNotesByNumber("created", "number", "desc");
+        sortAndRenderNotesByNumber("created", "date", "desc");
         return;
     }
     if (action === "showmore") {
@@ -206,11 +215,13 @@ function sortClickEventHandler(event) {
     var target = event.target;
     var action = target.getAttribute("id");
     if (action) {
-        var type = "number";
+        var type = "date";
         var order = "desc";
+        if (action === "priority") {
+            type = "number";
+        }
         if (action === "duedate") {
-            type = "String";
-            order = "desc";
+            order = "asc";
         }
         sortAndRenderNotesByNumber(action, type, order);
         $(target).addClass("active");
