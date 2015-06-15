@@ -15,7 +15,20 @@ var serve = serveStatic("static/"),
             // console.log("read notes from server called");
             res.writeHead(200, {'Content-Type': 'text/json'});
 			var stream = fs.createReadStream("./notes.json" );
-			stream.pipe(res);
+            stream.on('open', function() {
+                stream.pipe(res);
+            });
+            stream.on('error', function(err) { // node.json not existing
+                fs.writeFile('./notes.json', '[]', function(err){
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
+                stream = fs.createReadStream("./notes.json" );
+                stream.pipe(res);
+                console.log(err);
+            });
+
 		} else if(req.url == "/storeNotesOnServer"){
             // console.log("store on server called");
             var body = "";
