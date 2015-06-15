@@ -47,7 +47,7 @@
                     <label for="isFinished">Abgeschlossen{{#if isFinished}} {{prettyDateFormat finished}}{{/if}}</label>
                 </div>
                 <div class="description">
-                    <div class="block-ellipsis"><span>{{description}}</span></div>
+                    <div><span>{{{formatText description}}}</span></div>
                     [<a data-action="showmore" class="todo showmore" href="#">Mehr anzeigen</a>]
                 </div>
                 <div class="edit">

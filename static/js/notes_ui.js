@@ -105,6 +105,12 @@ Handlebars.registerHelper("prettyDateFormat", function (date, type) {
     return dateStr;
 });
 
+Handlebars.registerHelper("formatText", function (text) {
+    // replace linebreaks with <br> tags
+    text = text.replace(/(\r\n|\n|\r)/gm,"<br>");
+    return text;
+});
+
 Handlebars.registerHelper("setIsFinished", function (isFinished) {
     var checked = (isFinished) ? "checked" : "";
     return checked;
