@@ -14,8 +14,8 @@
 <body>
 <div class="container">
     <div class="row" id="toolbar">
-        <button data-action="new-note">Neue Notiz erstellen</button>
-        <select onchange="changeSkin()" id="skins" name="Skins">
+        <button id="new-note">Neue Notiz erstellen</button>
+        <select id="skins" name="Skins">
             <option value="skin-default">Skin Default (funktional)</option>
             <option value="skin-grey">Skin Grey</option>
             <option value="skin-green">Skin Green</option>
@@ -39,7 +39,7 @@
             {{#each this}}
             <li id="{{created}}" class="entry{{checkFilter isFinished}}">
                 <div class="date"><span>Termin: {{prettyDateFormat duedate "due"}}</span></div>
-                <div class="title"><span>{{title}}</span> ({{prettyDateFormat created}})</div>
+                <div class="title"><span>{{title}}</span></div>
                 <div class="priority"><span>Wichtigkeit: {{priority}}</span></div>
                 <div class="status">
                     <input data-action="finished" name="isFinished" id="isFinished" type="checkbox" {{setIsFinished

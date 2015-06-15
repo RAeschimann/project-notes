@@ -1,4 +1,29 @@
 /**
+ * navigation functions
+ *
+ * encapsulated in "class" Navigation
+ * using "revealing module pattern"
+ */
+
+var Navigation = (function () {
+
+    "use strict";
+
+    // navigation in between pages
+    function goto(url) {
+        window.location = url;
+    }
+
+    // public accessible functions
+    return {
+        goto: goto
+    };
+
+})();
+
+
+
+/**
  * business functions
  *
  * encapsulated in "class" Notes
@@ -6,6 +31,8 @@
  */
 
 var Notes = (function () {
+
+    "use strict";
 
     function getNotes() {
         $.getJSON("/getNotesFromServer",function(notes){
@@ -44,7 +71,7 @@ var Notes = (function () {
             // add updated note to notes Object
             updateNotes(getNoteKeyParameter(), noteToUpdate);
 
-            goto("index.html");
+            Navigation.goto("index.html");
         }
     }
 
@@ -54,14 +81,14 @@ var Notes = (function () {
         notes.splice(findNoteIndex(getNoteKeyParameter()), 1);
         // save updated notes
         setNotes(notes);
-        goto("index.html");
+        Navigation.goto("index.html");
     }
 
     function getNoteKeyParameter() {
         // get i from url - parameter "noteKey"
         var notekey = 0;
         try {
-            noteKey = decodeURIComponent(window.location.search.match(/(\?|&)noteKey\=([^&]*)/)[2]);
+            var noteKey = decodeURIComponent(window.location.search.match(/(\?|&)noteKey\=([^&]*)/)[2]);
             // check if note key is a valid timestamp (positiv integer)
             notekey = (/^\+?\d+$/.test(noteKey)) ? noteKey : 0;
         } catch (err) {
@@ -153,7 +180,7 @@ var Notes = (function () {
         // save notes with new note
         setNotes(notes);
 
-        goto("index.html");
+        Navigation.goto("index.html");
     }
 
     function updateNotes(id, note) {
