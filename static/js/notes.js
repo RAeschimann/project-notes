@@ -35,7 +35,7 @@ var Notes = (function () {
     "use strict";
 
     function getNotes() {
-        $.getJSON("/getNotesFromServer",function(notes){
+        $.getJSON("/notes",function(notes){
         console.log("get notes from server and save them to localstorage");
         localStorage.setItem("notes", JSON.stringify(notes));
         });
@@ -134,7 +134,7 @@ var Notes = (function () {
         // send notes to server
         $.ajax({
             type: "POST",
-            url: "/storeNotesOnServer",
+            url: "/notes",
             data: JSON.stringify(notes),
             success: function(data) { console.log('data posted'); },
             contentType: "application/json",

@@ -12,8 +12,6 @@
   "homepage": "https://github.com/RAeschimann/project-notes.git",
   "dependencies": {
     "body-parser": "^1.13.1",
-    "express": "^4.12.4",
-    "finalhandler": "^0.3.6",
-    "serve-static": "^1.9.2"
+    "express": "^4.12.4"
   }
 }
