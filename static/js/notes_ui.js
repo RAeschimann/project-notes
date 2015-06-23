@@ -183,15 +183,17 @@
     // event-handlers
     function notesClickEventHandler(event) {
         var action = event.target.getAttribute("data-action");
-        var id = event.target.closest("li").getAttribute("id");
-        if (action === "edit-note") {
-            editNote(id);
-            return;
-        }
-        if (action === "finished") {
-            Notes.changeStatus(id);
-            sortAndRenderNotesByNumber("created", "date", "desc");
-            return;
+        if (action) {
+            var id = event.target.closest("li").getAttribute("id");
+            if (action === "edit-note") {
+                editNote(id);
+                return;
+            }
+            if (action === "finished") {
+                Notes.changeStatus(id);
+                sortAndRenderNotesByNumber("created", "date", "desc");
+                return;
+            }
         }
     }
 
