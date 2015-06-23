@@ -48,36 +48,35 @@
 
     function applySkin() {
         var style = "";
-        if (sessionStorage.getItem('skin_style')) {
-            style = sessionStorage.getItem('skin_style');
+        if (sessionStorage.getItem("skin_style")) {
+            style = sessionStorage.getItem("skin_style");
         } else {
             style = $("#skins").val();
         }
         if (style) {
-            $('#skin-css').attr('href', 'css/' + style + '.css');
+            $("#skin-css").attr("href", "css/" + style + ".css");
         }
         // set actual skin in dropdown
         $("#skins").val(style);
     }
 
-    function showMore(id) {
-        alert("ToDo: show full description of note " + id);
-        /*
-         $("#"+id).find(".block-ellipsis").each(function () {
-         $(this).removeClass("block-ellipsis");
-         $(this).addClass("showless");
-         });
-         */
-    }
-
-    function showLess(id) {
-        alert("ToDo: show minimized description of note " + id);
+    function dotdotdotCallback(isTruncated, originalContent) {
+        if (!isTruncated) {
+            $("a", this).remove();
+        }
     }
 
     // rendering notes html with handlebars
     function renderNotes(notes) {
         var renderNotesHTMLTemplate = Handlebars.compile($("#notes-template").html());
         $("#displayNotes").html(renderNotesHTMLTemplate(notes));
+        $("div.description").dotdotdot({
+            after: "a.more",
+            ellipsis: "... ",
+            wrap: "word",
+            callback: dotdotdotCallback
+        });
+        $("div.description").on("click", showMoreClickEventHandler);
     }
 
     /* display note in list only when filter and status match */
@@ -194,13 +193,6 @@
             sortAndRenderNotesByNumber("created", "date", "desc");
             return;
         }
-        if (action === "showmore") {
-            showMore(id);
-            return;
-        }
-        if (action === "showless") {
-            showLess(id);
-        }
     }
 
     function toolbarClickEventHandler(event) {
@@ -276,6 +268,26 @@
                 $("#finished").addClass(CSSCLASSHIDE);
             }
         });
+        $("div.description").dotdotdot({
+            after: "a.more",
+            ellipsis: "... ",
+            wrap: "word",
+            callback: dotdotdotCallback
+        });
+        $("div.description").on("click", showMoreClickEventHandler);
+    }
+
+    function showMoreClickEventHandler(event) {
+        if ($(event.target).text() == "Mehr anzeigen") {
+            var div = $(event.target).closest("div.description");
+            div.trigger("destroy").find("a.more").hide();
+            div.css("max-height", "none");
+            $("a.less", div).show();
+        }
+        else {
+            $(event.target).hide();
+            $(event.target).closest('div.description').css("max-height", "50px").dotdotdot({ after: "a.more", callback: dotdotdotCallback });
+        }
     }
 
 })(jQuery, window, document);

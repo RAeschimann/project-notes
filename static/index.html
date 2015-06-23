@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="css/notes.css" type="text/css" media="all">
     <link rel="stylesheet" href="css/skin-default.css" type="text/css" media="all" id="skin-css">
     <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/jquery.dotdotdot.min.js"></script>
     <script src="js/handlebars-v3.0.3.js"></script>
     <script src="js/moment-with-locales.min.js"></script>
     <script src="js/notes.js"></script>
@@ -47,8 +48,7 @@
                     <label for="isFinished">Abgeschlossen{{#if isFinished}} {{prettyDateFormat finished}}{{/if}}</label>
                 </div>
                 <div class="description">
-                    <div><span>{{{formatText description}}}</span></div>
-                    [<a data-action="showmore" class="todo showmore" href="#">Mehr anzeigen</a>]
+                    {{{formatText description}}}<a class="more" href="#">Mehr anzeigen</a><a class="less" href="#">Weniger anzeigen</a>
                 </div>
                 <div class="edit">
                     <button data-action="edit-note">Notiz bearbeiten</button>

@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="css/notes.css" type="text/css" media="all">
     <link rel="stylesheet" href="css/skin-default.css" type="text/css" media="all" id="skin-css">
     <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/jquery.dotdotdot.min.js"></script>
     <script src="js/handlebars-v3.0.3.js"></script>
     <script src="js/notes.js"></script>
     <script src="js/notes_ui.js"></script>
@@ -36,7 +37,7 @@
         </div>
         <div class="row">
             <label for="duedate">Erledigt bis</label>
-            <input type="date" id="duedate" value="{{duedate}}"/>
+            <input type="date" id="duedate" value="{{duedate}}" placeholder="dd/MM/yyyy"/>
         </div>
         {{#if created}}
         <div class="row">
