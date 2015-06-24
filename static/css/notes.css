@@ -41,6 +41,7 @@ li.entry {
     -webkit-padding-start: 0px;
     list-style-type: none;
     padding-top: 20px;
+    border-top: solid 1px;
 }
 
 .entry {

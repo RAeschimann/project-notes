@@ -6,10 +6,7 @@ var dataFile = "./data/notes.json";
 module.exports.getNotesFromServer = function(req, res) {
     res.writeHead(200, {'Content-Type': 'text/json'});
     var stream = fs.createReadStream(dataFile);
-    stream.on('open', function(err) {
-        if (err) {
-            res.end();
-        }
+    stream.on('open', function() {
         stream.pipe(res);
     });
     stream.on('error', function(err) { // node.json not existing
