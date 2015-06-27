@@ -43,8 +43,6 @@ var Notes = (function () {
     }
 
     function updateNote() {
-        // ToDo: validate input
-
         // retrieve stored values to update later
         var noteToUpdate = findNote(getNoteKeyParameter());
 
@@ -130,7 +128,6 @@ var Notes = (function () {
     /* private functions */
 
     function setNotes(notes) {
-
         // send notes to server
         $.ajax({
             type: "POST",
@@ -156,7 +153,6 @@ var Notes = (function () {
 
 
     function addNewNote() {
-        // ToDo: validate input
         // get notes from local storage
         var notes = getNotes();
         if (!notes) {

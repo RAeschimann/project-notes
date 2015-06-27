@@ -40,7 +40,7 @@ Sonstiges
 
 ## Aufsetzen
 
-(lokale git- und node-installation werden vorausgesetzt)
+(lokale git- und node-Installation werden vorausgesetzt)
 
 ```bash
 # Repo klonen
@@ -59,4 +59,7 @@ npm i
 node index.js
 ```
 
-Im Browser unter http://localhost:3000 erreichbar.
+In einem Browser [1] unter http://localhost:3000 erreichbar.
+
+
+[1] Das Projekt ist nur für Chrome oder Opera optimiert, da zur Zeit nur diese Browser das HTML5 input-Feld vom Typ "date" unterstützen

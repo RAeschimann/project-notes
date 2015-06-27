@@ -36,4 +36,3 @@ module.exports.storeNotesOnServer = function(req, res) {
 
     });
 };
-
