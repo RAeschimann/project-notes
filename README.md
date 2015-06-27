@@ -40,6 +40,8 @@ Sonstiges
 
 ## Aufsetzen
 
+(lokale git- und node-installation werden vorausgesetzt)
+
 ```bash
 # Repo klonen
 git clone https://github.com/RAeschimann/project-notes.git
