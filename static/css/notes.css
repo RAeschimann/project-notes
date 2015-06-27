@@ -16,6 +16,7 @@ body {
 .row {
     padding: 10px;
     min-height: 35px;
+    max-width: 810px;
 }
 
 
@@ -36,6 +37,10 @@ body {
 
 
 /* styles for displaying note entries */
+
+ul {
+    padding-left: 0px;
+}
 
 li.entry {
     -webkit-padding-start: 0px;
